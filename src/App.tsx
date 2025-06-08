@@ -12,6 +12,8 @@ import UserManagement from "./pages/UserManagement";
 import Privacy from "./pages/Privacy";
 import Impressum from "./pages/Impressum";
 import DemoMuseumsmitarbeiter from "./pages/DemoMuseumsmitarbeiter";
+import Analytics from "./pages/Analytics";
+import TemplateGallery from "./pages/TemplateGallery";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +33,8 @@ const App = () => (
             path="/demo/museumsmitarbeiter"
             element={<DemoMuseumsmitarbeiter />}
           />
+          <Route path="/analytics" element={<Analytics />} />
+          <Route path="/templates" element={<TemplateGallery />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/impressum" element={<Impressum />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
