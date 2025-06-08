@@ -19,6 +19,7 @@ import ButtonGalleryDemo from "./pages/ButtonGalleryDemo";
 import DashboardTest from "./pages/DashboardTest";
 import HeaderDemo from "./pages/HeaderDemo";
 import TemplateTestPage from "./pages/TemplateTestPage";
+import TestDemo from "./pages/TestDemo";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +49,7 @@ const App = () => (
           <Route path="/button-gallery" element={<ButtonGalleryDemo />} />
           <Route path="/header-demo" element={<HeaderDemo />} />
           <Route path="/template-test" element={<TemplateTestPage />} />
+          <Route path="/test-demo" element={<TestDemo />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/impressum" element={<Impressum />} />
           <Route path="*" element={<NotFound />} />
