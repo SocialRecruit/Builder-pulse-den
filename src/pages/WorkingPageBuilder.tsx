@@ -23,6 +23,7 @@ import {
   Palette,
   Settings,
   ImageIcon,
+  Sparkles,
 } from "lucide-react";
 import { useLandingPages } from "@/hooks/useLandingPages";
 import { MediaGallery } from "@/components/ui/MediaGallery";
@@ -167,6 +168,17 @@ export default function WorkingPageBuilder() {
       ...page.blocks.find((b) => b.id === blockId)?.content,
       fields: newFields,
     });
+  };
+
+  const handleSelectButtonTemplate = (template: ButtonTemplate) => {
+    if (editingButtonBlock) {
+      handleUpdateBlock(editingButtonBlock, {
+        ...template.config,
+      });
+      setEditingButtonBlock(null);
+      setShowButtonTemplates(false);
+      toast.success("Button-Template angewendet!");
+    }
   };
 
   return (
@@ -1088,22 +1100,40 @@ export default function WorkingPageBuilder() {
                                   {/* Other block editors with similar styling tabs... */}
                                   {/* For brevity, showing simplified versions */}
 
-                                  {/* Button Editor with Styles */}
+                                  {/* Enhanced Button Editor with Templates */}
                                   {block.type === "button" && (
-                                    <div className="space-y-3">
-                                      <div>
-                                        <Label>Button-Text</Label>
-                                        <Input
-                                          value={block.content.text || ""}
-                                          onChange={(e) =>
-                                            handleUpdateBlock(block.id, {
-                                              ...block.content,
-                                              text: e.target.value,
-                                            })
-                                          }
-                                          placeholder="Button-Text"
-                                        />
+                                    <div className="space-y-4">
+                                      {/* Template Selector */}
+                                      <div className="flex items-center justify-between">
+                                        <Label className="text-base font-medium">Button konfigurieren</Label>
+                                        <Button
+                                          variant="outline"
+                                          size="sm"
+                                          onClick={() => {
+                                            setEditingButtonBlock(block.id);
+                                            setShowButtonTemplates(true);
+                                          }}
+                                          className="flex items-center gap-2"
+                                        >
+                                          <Sparkles className="w-4 h-4" />
+                                          Template wählen
+                                        </Button>
                                       </div>
+
+                                      <div className="space-y-3">
+                                        <div>
+                                          <Label>Button-Text</Label>
+                                          <Input
+                                            value={block.content.text || ""}
+                                            onChange={(e) =>
+                                              handleUpdateBlock(block.id, {
+                                                ...block.content,
+                                                text: e.target.value,
+                                              })
+                                            }
+                                            placeholder="Button-Text"
+                                          />
+                                        </div>
                                       <div>
                                         <Label>URL</Label>
                                         <Input
@@ -2163,6 +2193,16 @@ export default function WorkingPageBuilder() {
           setShowMediaGallery(false);
         }}
         selectedUrl={page.header.image}
+      />
+
+      {/* Button Template Modal */}
+      <ButtonTemplateSelector
+        isOpen={showButtonTemplates}
+        onClose={() => {
+          setShowButtonTemplates(false);
+          setEditingButtonBlock(null);
+        }}
+        onSelect={handleSelectButtonTemplate}
       />
     </div>
   );
