@@ -18,6 +18,7 @@ import Collaboration from "./pages/Collaboration";
 import ButtonGalleryDemo from "./pages/ButtonGalleryDemo";
 import DashboardTest from "./pages/DashboardTest";
 import HeaderDemo from "./pages/HeaderDemo";
+import FeaturesDemo from "./pages/FeaturesDemo";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +47,7 @@ const App = () => (
           <Route path="/collaboration" element={<Collaboration />} />
           <Route path="/button-gallery" element={<ButtonGalleryDemo />} />
           <Route path="/header-demo" element={<HeaderDemo />} />
+          <Route path="/features-demo" element={<FeaturesDemo />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/impressum" element={<Impressum />} />
           <Route path="*" element={<NotFound />} />

@@ -426,17 +426,17 @@ export default function Dashboard() {
 
             <Card
               className="hover:shadow-xl transition-all duration-300 cursor-pointer group"
-              onClick={() => navigate("/header-demo")}
+              onClick={() => navigate("/features-demo")}
             >
               <CardContent className="p-6">
                 <div className="flex items-center space-x-4">
                   <div className="bg-green-100 p-3 rounded-lg group-hover:bg-green-200 transition-colors duration-300">
-                    <Layout className="w-6 h-6 text-green-600" />
+                    <Sparkles className="w-6 h-6 text-green-600" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-gray-900">Header Demo</h4>
+                    <h4 className="font-bold text-gray-900">Features Demo</h4>
                     <p className="text-gray-600 text-sm">
-                      Neues Header-Design testen
+                      Template-Features testen
                     </p>
                   </div>
                 </div>
