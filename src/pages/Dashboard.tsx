@@ -24,7 +24,7 @@ import {
   Settings,
   LogOut,
   MoreVertical,
-  BarChart3,
+  BarChart3 as BarChart,
   Layout,
   FlaskConical,
 } from "lucide-react";
