@@ -426,7 +426,7 @@ export default function Dashboard() {
 
             <Card
               className="hover:shadow-xl transition-all duration-300 cursor-pointer group"
-              onClick={() => navigate("/features-demo")}
+              onClick={() => navigate("/template-test")}
             >
               <CardContent className="p-6">
                 <div className="flex items-center space-x-4">
@@ -434,9 +434,9 @@ export default function Dashboard() {
                     <Sparkles className="w-6 h-6 text-green-600" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-gray-900">Features Demo</h4>
+                    <h4 className="font-bold text-gray-900">Template Test</h4>
                     <p className="text-gray-600 text-sm">
-                      Template-Features testen
+                      Button & Body-Style Templates
                     </p>
                   </div>
                 </div>
