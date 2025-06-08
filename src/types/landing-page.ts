@@ -46,8 +46,20 @@ export interface ContentBlock {
   order: number;
 }
 
-export interface RichTextBlock {
-  html: string;
+export interface ContentBlock {
+  id: string;
+  type:
+    | "heading"
+    | "text"
+    | "richtext"
+    | "image"
+    | "button"
+    | "form"
+    | "list"
+    | "sourcecode"
+    | "spacer";
+  content: any;
+  order: number;
 }
 
 export interface ImageBlock {
@@ -87,8 +99,11 @@ export interface LandingPage {
     primaryColor?: string;
     secondaryColor?: string;
     backgroundColor?: string;
+    textColor?: string;
     fontFamily?: string;
     containerWidth?: string;
+    bodyPadding?: number;
+    lineHeight?: string;
   };
   seoTitle?: string;
   seoDescription?: string;
