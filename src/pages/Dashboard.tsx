@@ -35,6 +35,7 @@ import {
   Globe,
   Mail,
   Target,
+  Sparkles,
 } from "lucide-react";
 import { PageList } from "@/components/landing-builder/PageList";
 import { useLandingPages } from "@/hooks/useLandingPages";
