@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
-import WorkingPageBuilder from "./pages/WorkingPageBuilder";
+import WorkingPageBuilderFixed from "./pages/WorkingPageBuilderFixed";
 import EnhancedLandingPageRenderer from "./pages/EnhancedLandingPageRenderer";
 import UserManagement from "./pages/UserManagement";
 import Privacy from "./pages/Privacy";
@@ -33,7 +33,7 @@ const App = () => (
           <Route path="/dashboard-test" element={<DashboardTest />} />
           <Route
             path="/page-builder/:pageId"
-            element={<WorkingPageBuilder />}
+            element={<WorkingPageBuilderFixed />}
           />
           <Route path="/user-management" element={<UserManagement />} />
           <Route path="/jobs/:slug" element={<EnhancedLandingPageRenderer />} />
