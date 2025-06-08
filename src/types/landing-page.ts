@@ -10,6 +10,14 @@ export interface LandingPageHeader {
   title: string;
   image?: string;
   text: string;
+  subheadline?: string;
+  location?: string;
+  startDate?: string;
+  employmentType?: string;
+  height?: string;
+  alignment?: string;
+  overlay?: string;
+  overlayOpacity?: number;
 }
 
 export interface ContentBlock {
