@@ -55,12 +55,12 @@ export default function WorkingPageBuilder() {
   const [activeTab, setActiveTab] = useState("content");
   const [showMediaGallery, setShowMediaGallery] = useState(false);
   const [showButtonTemplates, setShowButtonTemplates] = useState(false);
-  const [editingButtonBlock, setEditingButtonBlock] = useState<string | null>(null);
+  const [editingButtonBlock, setEditingButtonBlock] = useState<string | null>(
+    null,
+  );
+  // Emoji Picker temporär deaktiviert
   // const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   // const [editingEmojiItem, setEditingEmojiItem] = useState<{blockId: string, itemIndex: number} | null>(null);
-    blockId: string;
-    itemIndex: number;
-  } | null>(null);
 
   if (!pageId || !page) {
     return (
