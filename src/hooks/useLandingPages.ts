@@ -43,8 +43,11 @@ export const useLandingPages = () => {
         primaryColor: "#3b82f6",
         secondaryColor: "#6b7280",
         backgroundColor: "#ffffff",
+        textColor: "#000000",
         fontFamily: "inter",
         containerWidth: "normal",
+        bodyPadding: 16,
+        lineHeight: "normal",
       },
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -218,9 +221,29 @@ const getDefaultBlockContent = (blockType: ContentBlock["type"]) => {
     case "form":
       return {
         title: "Bewerbungsformular",
-        email: "",
-        fields: [],
+        email: "bewerbung@firma.de",
+        fields: [
+          { label: "Name", type: "text", required: true },
+          { label: "E-Mail", type: "email", required: true },
+          { label: "Nachricht", type: "textarea", required: false },
+          { label: "Lebenslauf", type: "file", required: false },
+        ],
         embedCode: "",
+      };
+    case "list":
+      return {
+        title: "",
+        items: [
+          {
+            emoji: "📋",
+            text: "Sie übernehmen spannende Aufgaben in unserem Team",
+          },
+          { emoji: "✅", text: "Sie arbeiten in einem modernen Arbeitsumfeld" },
+          {
+            emoji: "🎯",
+            text: "Sie entwickeln sich persönlich und beruflich weiter",
+          },
+        ],
       };
     case "sourcecode":
       return {

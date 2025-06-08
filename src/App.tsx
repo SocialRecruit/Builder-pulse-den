@@ -7,7 +7,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import WorkingPageBuilder from "./pages/WorkingPageBuilder";
-import LandingPage from "./pages/LandingPage";
+import EnhancedLandingPageRenderer from "./pages/EnhancedLandingPageRenderer";
 import UserManagement from "./pages/UserManagement";
 import Privacy from "./pages/Privacy";
 import Impressum from "./pages/Impressum";
@@ -32,7 +32,7 @@ const App = () => (
             element={<WorkingPageBuilder />}
           />
           <Route path="/user-management" element={<UserManagement />} />
-          <Route path="/jobs/:slug" element={<LandingPage />} />
+          <Route path="/jobs/:slug" element={<EnhancedLandingPageRenderer />} />
           <Route
             path="/demo/museumsmitarbeiter"
             element={<DemoMuseumsmitarbeiter />}
