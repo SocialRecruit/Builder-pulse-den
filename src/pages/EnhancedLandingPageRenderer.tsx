@@ -338,28 +338,93 @@ export default function EnhancedLandingPageRenderer() {
       )}
 
       {/* Page Header */}
-      <div className="relative bg-gradient-to-br from-gray-700 to-gray-900 text-white">
+      <div
+        className="relative w-full overflow-hidden"
+        style={{
+          height: `${page.header.customHeight || 400}px`,
+          minHeight: "200px",
+        }}
+      >
+        {/* Background Image */}
         {page.header.image && (
           <div className="absolute inset-0">
             <img
               src={page.header.image}
               alt={page.header.title}
-              className="w-full h-full object-cover opacity-60"
+              className="w-full h-full object-cover"
             />
           </div>
         )}
 
-        <div className="relative container mx-auto px-4 py-16 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            {page.header.title}
-          </h1>
+        {/* Overlay */}
+        {page.header.overlay && page.header.overlay !== "none" && (
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundColor:
+                page.header.overlay === "black" ? "#000000" : "#ffffff",
+              opacity: (page.header.overlayOpacity || 40) / 100,
+            }}
+          />
+        )}
 
-          {page.header.text && (
-            <p className="text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
-              {page.header.text}
-            </p>
-          )}
+        {/* Content Container */}
+        <div
+          className={`
+            relative h-full flex flex-col justify-center items-center px-6 text-white
+            ${page.header.alignment === "left" ? "items-start text-left" : ""}
+            ${page.header.alignment === "right" ? "items-end text-right" : ""}
+            ${page.header.alignment === "center" ? "items-center text-center" : ""}
+          `}
+        >
+          <div className="max-w-4xl mx-auto space-y-4">
+            {/* Subheadline */}
+            {page.header.subheadline && (
+              <p className="text-sm md:text-base font-medium text-white/90 uppercase tracking-wide">
+                {page.header.subheadline}
+              </p>
+            )}
+
+            {/* Main Title */}
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold font-montserrat leading-tight">
+              {page.header.title}
+            </h1>
+
+            {/* Job Details */}
+            <div className="flex flex-wrap gap-4 text-sm md:text-base">
+              {page.header.location && (
+                <div className="flex items-center space-x-2">
+                  <span className="text-lg">📍</span>
+                  <span>{page.header.location}</span>
+                </div>
+              )}
+              {page.header.startDate && (
+                <div className="flex items-center space-x-2">
+                  <span className="text-lg">📅</span>
+                  <span>{page.header.startDate}</span>
+                </div>
+              )}
+              {page.header.employmentType && (
+                <div className="flex items-center space-x-2">
+                  <span className="text-lg">💼</span>
+                  <span>{page.header.employmentType}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Description Text */}
+            {page.header.text && (
+              <p className="text-lg md:text-xl text-white/90 max-w-2xl leading-relaxed">
+                {page.header.text}
+              </p>
+            )}
+          </div>
         </div>
+
+        {/* Fallback background if no image */}
+        {!page.header.image && (
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-700 to-purple-800" />
+        )}
       </div>
 
       {/* Page Content */}

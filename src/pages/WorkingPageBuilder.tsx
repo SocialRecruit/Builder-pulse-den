@@ -261,33 +261,76 @@ export default function WorkingPageBuilder() {
                         </div>
 
                         <div>
-                          <Label>Header-Höhe</Label>
-                          <Select
-                            value={page.header.height || "normal"}
-                            onValueChange={(value) =>
-                              updatePage(page.id, {
-                                header: { ...page.header, height: value },
-                              })
-                            }
-                          >
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="small">
-                                Klein (300px)
-                              </SelectItem>
-                              <SelectItem value="normal">
-                                Normal (400px)
-                              </SelectItem>
-                              <SelectItem value="large">
-                                Groß (500px)
-                              </SelectItem>
-                              <SelectItem value="xl">
-                                Sehr groß (600px)
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
+                          <Label>Header-Höhe (px)</Label>
+                          <div className="space-y-3">
+                            <Input
+                              type="range"
+                              min="0"
+                              max="1000"
+                              step="10"
+                              value={page.header.customHeight || 400}
+                              onChange={(e) =>
+                                updatePage(page.id, {
+                                  header: {
+                                    ...page.header,
+                                    customHeight: parseInt(e.target.value),
+                                  },
+                                })
+                              }
+                              className="w-full"
+                            />
+                            <div className="flex justify-between text-xs text-gray-500">
+                              <span>0px</span>
+                              <span className="font-medium text-blue-600">
+                                {page.header.customHeight || 400}px
+                              </span>
+                              <span>1000px</span>
+                            </div>
+                            <div className="flex gap-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() =>
+                                  updatePage(page.id, {
+                                    header: {
+                                      ...page.header,
+                                      customHeight: 300,
+                                    },
+                                  })
+                                }
+                              >
+                                Klein
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() =>
+                                  updatePage(page.id, {
+                                    header: {
+                                      ...page.header,
+                                      customHeight: 400,
+                                    },
+                                  })
+                                }
+                              >
+                                Normal
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() =>
+                                  updatePage(page.id, {
+                                    header: {
+                                      ...page.header,
+                                      customHeight: 600,
+                                    },
+                                  })
+                                }
+                              >
+                                Groß
+                              </Button>
+                            </div>
+                          </div>
                         </div>
 
                         <div>
@@ -1660,7 +1703,7 @@ export default function WorkingPageBuilder() {
                           page.published ? "text-green-600" : "text-orange-600"
                         }
                       >
-                        {page.published ? "✅ Veröffentlicht" : "⏳ Entwurf"}
+                        {page.published ? "✅ Veröffentlicht" : "�� Entwurf"}
                       </span>
                     </div>
                     <div className="flex justify-between">
