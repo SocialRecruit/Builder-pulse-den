@@ -6,44 +6,23 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  ArrowLeft,
-  Save,
-  Eye,
-  Plus,
-  MoreVertical,
-  Settings,
-} from "lucide-react";
+import { ArrowLeft, Save, Eye, Plus, Settings } from "lucide-react";
 import { HeaderSection } from "@/components/landing-builder/HeaderSection";
 import { BlockEditor } from "@/components/landing-builder/BlockTypes";
 import { BlockRenderer } from "@/components/landing-builder/BlockRenderer";
-import { useLandingPages } from '@/hooks/useLandingPages';
-import { useUsers } from '@/hooks/useUsers';
-import { ContentBlock } from '@/types/landing-page';
-import { QRCodeGenerator } from '@/components/landing-builder/QRCodeGenerator';
-import { SocialMediaPreview } from '@/components/landing-builder/SocialMediaPreview';
-import { SEOChecker } from '@/components/landing-builder/SEOChecker';
-import { ABTestManager } from '@/components/landing-builder/ABTestManager';
-import { toast } from 'sonner';
+import { QRCodeGenerator } from "@/components/landing-builder/QRCodeGenerator";
+import { SocialMediaPreview } from "@/components/landing-builder/SocialMediaPreview";
+import { SEOChecker } from "@/components/landing-builder/SEOChecker";
+import { ABTestManager } from "@/components/landing-builder/ABTestManager";
+import { useLandingPages } from "@/hooks/useLandingPages";
+import { useUsers } from "@/hooks/useUsers";
+import { ContentBlock } from "@/types/landing-page";
+import { toast } from "sonner";
 
 export default function PageBuilder() {
   const { pageId } = useParams<{ pageId: string }>();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("content");
-  const [showPreview, setShowPreview] = useState(false);
 
   const { pages, updatePage, addBlock, updateBlock, deleteBlock } =
     useLandingPages();
@@ -254,6 +233,27 @@ export default function PageBuilder() {
                   </CardContent>
                 </Card>
 
+                {/* Advanced Features */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">
+                      Erweiterte Features
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <QRCodeGenerator
+                      pageUrl={`${window.location.origin}/jobs/${page.slug}`}
+                      pageTitle={page.title}
+                    />
+
+                    <SocialMediaPreview page={page} />
+
+                    <SEOChecker page={page} />
+
+                    <ABTestManager page={page} />
+                  </CardContent>
+                </Card>
+
                 {/* Quick Actions */}
                 <Card>
                   <CardHeader>
@@ -271,32 +271,12 @@ export default function PageBuilder() {
                     <Button
                       variant="outline"
                       className="w-full justify-start"
-                      onClick={() => setActiveTab('settings')}
+                      onClick={() => setActiveTab("settings")}
                     >
                       <Settings className="h-4 w-4 mr-2" />
                       Einstellungen
                     </Button>
                   </CardContent>
-                </Card>
-
-                {/* Advanced Features */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">Erweiterte Features</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <QRCodeGenerator
-                      pageUrl={`${window.location.origin}/jobs/${page.slug}`}
-                      pageTitle={page.title}
-                    />
-
-                    <SocialMediaPreview page={page} />
-
-                    <SEOChecker page={page} />
-
-                    <ABTestManager page={page} />
-                  </CardContent>
-                </Card>
                 </Card>
               </div>
             </div>
