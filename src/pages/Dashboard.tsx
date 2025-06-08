@@ -118,7 +118,7 @@ export default function Dashboard() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem onClick={() => navigate("/analytics")}>
-                    <BarChart3 className="h-4 w-4 mr-2" />
+                    <BarChart className="h-4 w-4 mr-2" />
                     Analytics
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate("/templates")}>
@@ -177,7 +177,7 @@ export default function Dashboard() {
               variant="outline"
               className="h-auto p-6 flex flex-col items-center space-y-2"
             >
-              <BarChart3 className="h-8 w-8 text-green-600" />
+              <BarChart className="w-8 h-8 text-green-600 mb-3" />
               <Card
                 className="p-6 hover:shadow-lg transition-shadow cursor-pointer"
                 onClick={() => navigate("/user-management")}
