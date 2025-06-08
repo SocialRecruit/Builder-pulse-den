@@ -178,12 +178,38 @@ export default function Dashboard() {
               className="h-auto p-6 flex flex-col items-center space-y-2"
             >
               <BarChart3 className="h-8 w-8 text-green-600" />
-              <div className="text-center">
-                <div className="font-semibold">Analytics</div>
-                <div className="text-xs text-gray-600">
-                  Performance Tracking
-                </div>
-              </div>
+              <Card
+                className="p-6 hover:shadow-lg transition-shadow cursor-pointer"
+                onClick={() => navigate("/user-management")}
+              >
+                <Users className="w-8 h-8 text-purple-600 mb-3" />
+                <h3 className="font-semibold text-gray-900">Team</h3>
+                <p className="text-sm text-gray-600">
+                  Team-Mitglieder verwalten
+                </p>
+              </Card>
+
+              <Card
+                className="p-6 hover:shadow-lg transition-shadow cursor-pointer"
+                onClick={() => navigate("/button-gallery")}
+              >
+                <div className="w-8 h-8 text-orange-600 mb-3 text-2xl">🎨</div>
+                <h3 className="font-semibold text-gray-900">Button Gallery</h3>
+                <p className="text-sm text-gray-600">
+                  Interaktive Button-Effekte testen
+                </p>
+              </Card>
+
+              <Card
+                className="p-6 hover:shadow-lg transition-shadow cursor-pointer"
+                onClick={() => navigate("/templates")}
+              >
+                <div className="w-8 h-8 text-cyan-600 mb-3 text-2xl">📋</div>
+                <h3 className="font-semibold text-gray-900">Templates</h3>
+                <p className="text-sm text-gray-600">
+                  Vorgefertigte Vorlagen nutzen
+                </p>
+              </Card>
             </Button>
 
             <Button

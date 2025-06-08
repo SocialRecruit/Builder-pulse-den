@@ -40,9 +40,9 @@ const App = () => (
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/templates" element={<TemplateGallery />} />
           <Route path="/collaboration" element={<Collaboration />} />
+          <Route path="/button-gallery" element={<ButtonGalleryDemo />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/impressum" element={<Impressum />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
