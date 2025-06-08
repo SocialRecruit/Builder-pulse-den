@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { useLandingPages } from "@/hooks/useLandingPages";
 import { MediaGallery } from "@/components/ui/MediaGallery";
+import { EmojiPicker } from "@/components/ui/EmojiPicker";
 import {
   ButtonTemplateSelector,
   type ButtonTemplate,
