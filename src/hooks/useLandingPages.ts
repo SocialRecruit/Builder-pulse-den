@@ -45,9 +45,12 @@ export const useLandingPages = () => {
       published: false,
     };
 
-    const updatedPages = [...pages, newPage];
-    setPages(updatedPages);
-    saveLandingPages(updatedPages);
+    // Update pages state first
+    setPages((prevPages) => {
+      const updatedPages = [...prevPages, newPage];
+      saveLandingPages(updatedPages);
+      return updatedPages;
+    });
 
     return newPage;
   };
