@@ -31,8 +31,19 @@ export interface HeadingBlock {
   level: 1 | 2 | 3 | 4 | 5 | 6;
 }
 
-export interface TextBlock {
-  text: string;
+export interface ContentBlock {
+  id: string;
+  type:
+    | "heading"
+    | "text"
+    | "richtext"
+    | "image"
+    | "button"
+    | "form"
+    | "sourcecode"
+    | "spacer";
+  content: any;
+  order: number;
 }
 
 export interface RichTextBlock {
@@ -71,6 +82,13 @@ export interface LandingPage {
     showImpressum: boolean;
     showPrivacy: boolean;
     customFooterText?: string;
+  };
+  design?: {
+    primaryColor?: string;
+    secondaryColor?: string;
+    backgroundColor?: string;
+    fontFamily?: string;
+    containerWidth?: string;
   };
   seoTitle?: string;
   seoDescription?: string;

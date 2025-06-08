@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
-import PageBuilderSimple from "./pages/PageBuilderSimple";
+import AdvancedPageBuilder from "./pages/AdvancedPageBuilder";
 import LandingPage from "./pages/LandingPage";
 import UserManagement from "./pages/UserManagement";
 import Privacy from "./pages/Privacy";
@@ -27,7 +27,10 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/page-builder/:pageId" element={<PageBuilderSimple />} />
+          <Route
+            path="/page-builder/:pageId"
+            element={<AdvancedPageBuilder />}
+          />
           <Route path="/user-management" element={<UserManagement />} />
           <Route path="/jobs/:slug" element={<LandingPage />} />
           <Route
