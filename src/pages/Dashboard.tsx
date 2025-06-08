@@ -125,6 +125,10 @@ export default function Dashboard() {
                     <Layout className="h-4 w-4 mr-2" />
                     Templates
                   </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/collaboration")}>
+                    <Users className="h-4 w-4 mr-2" />
+                    Team Collaboration
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => navigate("/user-management")}
                   >
