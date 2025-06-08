@@ -28,14 +28,19 @@ import {
 import { useLandingPages } from "@/hooks/useLandingPages";
 import { MediaGallery } from "@/components/ui/MediaGallery";
 import {
+  ButtonTemplateSelector,
+  type ButtonTemplate,
+} from "@/components/ui/ButtonTemplateSelector";
+import {
+  BodyStyleTemplateSelector,
+  QuickBodyStyleSelector,
+  type BodyStyleTemplate,
+} from "@/components/ui/BodyStyleTemplates";
+import {
   FormBlockEditor,
   defaultFormBlock,
-  EnhancedFormBlock,
+  type EnhancedFormBlock,
 } from "@/components/landing-builder/blocks/FormBlock";
-import {
-  ButtonTemplateSelector,
-  ButtonTemplate,
-} from "@/components/ui/ButtonTemplateSelector";
 import { toast } from "sonner";
 
 export default function WorkingPageBuilder() {
@@ -49,6 +54,7 @@ export default function WorkingPageBuilder() {
   const [activeTab, setActiveTab] = useState("content");
   const [showMediaGallery, setShowMediaGallery] = useState(false);
   const [showButtonTemplates, setShowButtonTemplates] = useState(false);
+  const [showBodyStyleTemplates, setShowBodyStyleTemplates] = useState(false);
   const [editingButtonBlock, setEditingButtonBlock] = useState<string | null>(
     null,
   );
@@ -124,6 +130,28 @@ export default function WorkingPageBuilder() {
     toast.success("Block gelöscht!");
   };
 
+  const handleSelectButtonTemplate = (template: ButtonTemplate) => {
+    if (editingButtonBlock) {
+      handleUpdateBlock(editingButtonBlock, {
+        ...template.config,
+      });
+      setEditingButtonBlock(null);
+      setShowButtonTemplates(false);
+      toast.success("Button-Template angewendet!");
+    }
+  };
+
+  const handleSelectBodyStyleTemplate = (template: BodyStyleTemplate) => {
+    updatePage(page.id, {
+      design: {
+        ...page.design,
+        ...template.config,
+      },
+    });
+    setShowBodyStyleTemplates(false);
+    toast.success("Body-Style angewendet!");
+  };
+
   const addListItem = (blockId: string, currentItems: any[]) => {
     const newItems = [
       ...currentItems,
@@ -145,40 +173,6 @@ export default function WorkingPageBuilder() {
       ...page.blocks.find((b) => b.id === blockId)?.content,
       items: newItems,
     });
-  };
-
-  const addFormField = (blockId: string, currentFields: any[]) => {
-    const newFields = [
-      ...currentFields,
-      { label: "Neues Feld", type: "text", required: false, placeholder: "" },
-    ];
-    handleUpdateBlock(blockId, {
-      ...page.blocks.find((b) => b.id === blockId)?.content,
-      fields: newFields,
-    });
-  };
-
-  const removeFormField = (
-    blockId: string,
-    currentFields: any[],
-    index: number,
-  ) => {
-    const newFields = currentFields.filter((_, i) => i !== index);
-    handleUpdateBlock(blockId, {
-      ...page.blocks.find((b) => b.id === blockId)?.content,
-      fields: newFields,
-    });
-  };
-
-  const handleSelectButtonTemplate = (template: ButtonTemplate) => {
-    if (editingButtonBlock) {
-      handleUpdateBlock(editingButtonBlock, {
-        ...template.config,
-      });
-      setEditingButtonBlock(null);
-      setShowButtonTemplates(false);
-      toast.success("Button-Template angewendet!");
-    }
   };
 
   return (
@@ -601,511 +595,13 @@ export default function WorkingPageBuilder() {
 
                               {activeBlock === block.id && (
                                 <CardContent className="pt-0">
-                                  {/* All block editors with styling options */}
-
-                                  {/* Heading Editor with Styles */}
-                                  {block.type === "heading" && (
-                                    <div className="space-y-4">
-                                      <Tabs defaultValue="content">
-                                        <TabsList className="grid w-full grid-cols-2">
-                                          <TabsTrigger value="content">
-                                            Inhalt
-                                          </TabsTrigger>
-                                          <TabsTrigger value="style">
-                                            Style
-                                          </TabsTrigger>
-                                        </TabsList>
-
-                                        <TabsContent
-                                          value="content"
-                                          className="space-y-3"
-                                        >
-                                          <div>
-                                            <Label>Überschrift</Label>
-                                            <Input
-                                              value={block.content.text || ""}
-                                              onChange={(e) =>
-                                                handleUpdateBlock(block.id, {
-                                                  ...block.content,
-                                                  text: e.target.value,
-                                                })
-                                              }
-                                              placeholder="Überschrift eingeben"
-                                            />
-                                          </div>
-                                          <div>
-                                            <Label>Größe</Label>
-                                            <Select
-                                              value={
-                                                block.content.level?.toString() ||
-                                                "2"
-                                              }
-                                              onValueChange={(value) =>
-                                                handleUpdateBlock(block.id, {
-                                                  ...block.content,
-                                                  level: parseInt(value),
-                                                })
-                                              }
-                                            >
-                                              <SelectTrigger>
-                                                <SelectValue />
-                                              </SelectTrigger>
-                                              <SelectContent>
-                                                <SelectItem value="1">
-                                                  H1 - Sehr groß
-                                                </SelectItem>
-                                                <SelectItem value="2">
-                                                  H2 - Groß
-                                                </SelectItem>
-                                                <SelectItem value="3">
-                                                  H3 - Mittel
-                                                </SelectItem>
-                                                <SelectItem value="4">
-                                                  H4 - Klein
-                                                </SelectItem>
-                                              </SelectContent>
-                                            </Select>
-                                          </div>
-                                        </TabsContent>
-
-                                        <TabsContent
-                                          value="style"
-                                          className="space-y-3"
-                                        >
-                                          <div>
-                                            <Label>Ausrichtung</Label>
-                                            <Select
-                                              value={
-                                                block.content.alignment ||
-                                                "left"
-                                              }
-                                              onValueChange={(value) =>
-                                                handleUpdateBlock(block.id, {
-                                                  ...block.content,
-                                                  alignment: value,
-                                                })
-                                              }
-                                            >
-                                              <SelectTrigger>
-                                                <SelectValue />
-                                              </SelectTrigger>
-                                              <SelectContent>
-                                                <SelectItem value="left">
-                                                  Links
-                                                </SelectItem>
-                                                <SelectItem value="center">
-                                                  Mittig
-                                                </SelectItem>
-                                                <SelectItem value="right">
-                                                  Rechts
-                                                </SelectItem>
-                                              </SelectContent>
-                                            </Select>
-                                          </div>
-                                          <div>
-                                            <Label>Textfarbe</Label>
-                                            <Input
-                                              type="color"
-                                              value={
-                                                block.content.color || "#000000"
-                                              }
-                                              onChange={(e) =>
-                                                handleUpdateBlock(block.id, {
-                                                  ...block.content,
-                                                  color: e.target.value,
-                                                })
-                                              }
-                                            />
-                                          </div>
-                                          <div>
-                                            <Label>Margin unten (px)</Label>
-                                            <Input
-                                              type="number"
-                                              value={
-                                                block.content.marginBottom || 16
-                                              }
-                                              onChange={(e) =>
-                                                handleUpdateBlock(block.id, {
-                                                  ...block.content,
-                                                  marginBottom: parseInt(
-                                                    e.target.value,
-                                                  ),
-                                                })
-                                              }
-                                            />
-                                          </div>
-                                        </TabsContent>
-                                      </Tabs>
-                                    </div>
-                                  )}
-
-                                  {/* Enhanced Form Editor */}
-                                  {block.type === "form" && (
-                                    <div className="space-y-4">
-                                      <Tabs defaultValue="fields">
-                                        <TabsList className="grid w-full grid-cols-3">
-                                          <TabsTrigger value="fields">
-                                            Felder
-                                          </TabsTrigger>
-                                          <TabsTrigger value="settings">
-                                            Einstellungen
-                                          </TabsTrigger>
-                                          <TabsTrigger value="style">
-                                            Style
-                                          </TabsTrigger>
-                                        </TabsList>
-
-                                        <TabsContent
-                                          value="fields"
-                                          className="space-y-3"
-                                        >
-                                          <div>
-                                            <Label>Formular-Felder</Label>
-                                            <div className="space-y-3 mt-2">
-                                              {(block.content.fields || []).map(
-                                                (field: any, index: number) => (
-                                                  <div
-                                                    key={index}
-                                                    className="border rounded p-3 space-y-2"
-                                                  >
-                                                    <div className="flex gap-2 items-center">
-                                                      <Input
-                                                        value={
-                                                          field.label || ""
-                                                        }
-                                                        onChange={(e) => {
-                                                          const newFields = [
-                                                            ...(block.content
-                                                              .fields || []),
-                                                          ];
-                                                          newFields[index] = {
-                                                            ...field,
-                                                            label:
-                                                              e.target.value,
-                                                          };
-                                                          handleUpdateBlock(
-                                                            block.id,
-                                                            {
-                                                              ...block.content,
-                                                              fields: newFields,
-                                                            },
-                                                          );
-                                                        }}
-                                                        placeholder="Feldname"
-                                                        className="flex-1"
-                                                      />
-                                                      <Select
-                                                        value={
-                                                          field.type || "text"
-                                                        }
-                                                        onValueChange={(
-                                                          value,
-                                                        ) => {
-                                                          const newFields = [
-                                                            ...(block.content
-                                                              .fields || []),
-                                                          ];
-                                                          newFields[index] = {
-                                                            ...field,
-                                                            type: value,
-                                                          };
-                                                          handleUpdateBlock(
-                                                            block.id,
-                                                            {
-                                                              ...block.content,
-                                                              fields: newFields,
-                                                            },
-                                                          );
-                                                        }}
-                                                      >
-                                                        <SelectTrigger className="w-32">
-                                                          <SelectValue />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                          <SelectItem value="text">
-                                                            Text
-                                                          </SelectItem>
-                                                          <SelectItem value="email">
-                                                            E-Mail
-                                                          </SelectItem>
-                                                          <SelectItem value="tel">
-                                                            Telefon
-                                                          </SelectItem>
-                                                          <SelectItem value="textarea">
-                                                            Textbereich
-                                                          </SelectItem>
-                                                          <SelectItem value="file">
-                                                            Datei
-                                                          </SelectItem>
-                                                          <SelectItem value="select">
-                                                            Auswahl
-                                                          </SelectItem>
-                                                        </SelectContent>
-                                                      </Select>
-                                                      <Button
-                                                        size="sm"
-                                                        variant="outline"
-                                                        onClick={() =>
-                                                          removeFormField(
-                                                            block.id,
-                                                            block.content
-                                                              .fields || [],
-                                                            index,
-                                                          )
-                                                        }
-                                                      >
-                                                        <Trash2 className="h-4 w-4" />
-                                                      </Button>
-                                                    </div>
-
-                                                    <div className="grid grid-cols-2 gap-2">
-                                                      <Input
-                                                        value={
-                                                          field.placeholder ||
-                                                          ""
-                                                        }
-                                                        onChange={(e) => {
-                                                          const newFields = [
-                                                            ...(block.content
-                                                              .fields || []),
-                                                          ];
-                                                          newFields[index] = {
-                                                            ...field,
-                                                            placeholder:
-                                                              e.target.value,
-                                                          };
-                                                          handleUpdateBlock(
-                                                            block.id,
-                                                            {
-                                                              ...block.content,
-                                                              fields: newFields,
-                                                            },
-                                                          );
-                                                        }}
-                                                        placeholder="Platzhalter-Text"
-                                                        className="text-xs"
-                                                      />
-                                                      <div className="flex items-center gap-2">
-                                                        <input
-                                                          type="checkbox"
-                                                          checked={
-                                                            field.required ||
-                                                            false
-                                                          }
-                                                          onChange={(e) => {
-                                                            const newFields = [
-                                                              ...(block.content
-                                                                .fields || []),
-                                                            ];
-                                                            newFields[index] = {
-                                                              ...field,
-                                                              required:
-                                                                e.target
-                                                                  .checked,
-                                                            };
-                                                            handleUpdateBlock(
-                                                              block.id,
-                                                              {
-                                                                ...block.content,
-                                                                fields:
-                                                                  newFields,
-                                                              },
-                                                            );
-                                                          }}
-                                                        />
-                                                        <Label className="text-xs">
-                                                          Pflichtfeld
-                                                        </Label>
-                                                      </div>
-                                                    </div>
-
-                                                    {field.type ===
-                                                      "select" && (
-                                                      <div>
-                                                        <Label className="text-xs">
-                                                          Optionen (eine pro
-                                                          Zeile)
-                                                        </Label>
-                                                        <Textarea
-                                                          value={
-                                                            field.options || ""
-                                                          }
-                                                          onChange={(e) => {
-                                                            const newFields = [
-                                                              ...(block.content
-                                                                .fields || []),
-                                                            ];
-                                                            newFields[index] = {
-                                                              ...field,
-                                                              options:
-                                                                e.target.value,
-                                                            };
-                                                            handleUpdateBlock(
-                                                              block.id,
-                                                              {
-                                                                ...block.content,
-                                                                fields:
-                                                                  newFields,
-                                                              },
-                                                            );
-                                                          }}
-                                                          placeholder="Option 1&#10;Option 2&#10;Option 3"
-                                                          rows={3}
-                                                          className="text-xs"
-                                                        />
-                                                      </div>
-                                                    )}
-                                                  </div>
-                                                ),
-                                              )}
-                                              <Button
-                                                variant="outline"
-                                                onClick={() =>
-                                                  addFormField(
-                                                    block.id,
-                                                    block.content.fields || [],
-                                                  )
-                                                }
-                                                className="w-full"
-                                              >
-                                                + Feld hinzufügen
-                                              </Button>
-                                            </div>
-                                          </div>
-                                        </TabsContent>
-
-                                        <TabsContent
-                                          value="settings"
-                                          className="space-y-3"
-                                        >
-                                          <div>
-                                            <Label>Formular-Titel</Label>
-                                            <Input
-                                              value={block.content.title || ""}
-                                              onChange={(e) =>
-                                                handleUpdateBlock(block.id, {
-                                                  ...block.content,
-                                                  title: e.target.value,
-                                                })
-                                              }
-                                              placeholder="Bewerbungsformular"
-                                            />
-                                          </div>
-                                          <div>
-                                            <Label>
-                                              E-Mail für Bewerbungen
-                                            </Label>
-                                            <Input
-                                              value={block.content.email || ""}
-                                              onChange={(e) =>
-                                                handleUpdateBlock(block.id, {
-                                                  ...block.content,
-                                                  email: e.target.value,
-                                                })
-                                              }
-                                              placeholder="bewerbung@firma.de"
-                                            />
-                                          </div>
-                                          <div>
-                                            <Label>Button-Text</Label>
-                                            <Input
-                                              value={
-                                                block.content.submitText ||
-                                                "Bewerbung absenden"
-                                              }
-                                              onChange={(e) =>
-                                                handleUpdateBlock(block.id, {
-                                                  ...block.content,
-                                                  submitText: e.target.value,
-                                                })
-                                              }
-                                              placeholder="Bewerbung absenden"
-                                            />
-                                          </div>
-                                          <div>
-                                            <Label>Bestätigungstext</Label>
-                                            <Textarea
-                                              value={
-                                                block.content.successMessage ||
-                                                "Vielen Dank für Ihre Bewerbung!"
-                                              }
-                                              onChange={(e) =>
-                                                handleUpdateBlock(block.id, {
-                                                  ...block.content,
-                                                  successMessage:
-                                                    e.target.value,
-                                                })
-                                              }
-                                              placeholder="Vielen Dank für Ihre Bewerbung!"
-                                              rows={2}
-                                            />
-                                          </div>
-                                        </TabsContent>
-
-                                        <TabsContent
-                                          value="style"
-                                          className="space-y-3"
-                                        >
-                                          <div>
-                                            <Label>Form-Style</Label>
-                                            <Select
-                                              value={
-                                                block.content.formStyle ||
-                                                "card"
-                                              }
-                                              onValueChange={(value) =>
-                                                handleUpdateBlock(block.id, {
-                                                  ...block.content,
-                                                  formStyle: value,
-                                                })
-                                              }
-                                            >
-                                              <SelectTrigger>
-                                                <SelectValue />
-                                              </SelectTrigger>
-                                              <SelectContent>
-                                                <SelectItem value="card">
-                                                  Karte mit Rahmen
-                                                </SelectItem>
-                                                <SelectItem value="flat">
-                                                  Flach (ohne Rahmen)
-                                                </SelectItem>
-                                                <SelectItem value="colored">
-                                                  Farbiger Hintergrund
-                                                </SelectItem>
-                                              </SelectContent>
-                                            </Select>
-                                          </div>
-                                          <div>
-                                            <Label>Button-Farbe</Label>
-                                            <Input
-                                              type="color"
-                                              value={
-                                                block.content.buttonColor ||
-                                                "#3b82f6"
-                                              }
-                                              onChange={(e) =>
-                                                handleUpdateBlock(block.id, {
-                                                  ...block.content,
-                                                  buttonColor: e.target.value,
-                                                })
-                                              }
-                                            />
-                                          </div>
-                                        </TabsContent>
-                                      </Tabs>
-                                    </div>
-                                  )}
-
-                                  {/* Other block editors with similar styling tabs... */}
-                                  {/* For brevity, showing simplified versions */}
-
                                   {/* Enhanced Button Editor with Templates */}
                                   {block.type === "button" && (
                                     <div className="space-y-4">
-                                      {/* Template Selector */}
                                       <div className="flex items-center justify-between">
-                                        <Label className="text-base font-medium">Button konfigurieren</Label>
+                                        <Label className="text-base font-medium">
+                                          Button konfigurieren
+                                        </Label>
                                         <Button
                                           variant="outline"
                                           size="sm"
@@ -1134,113 +630,127 @@ export default function WorkingPageBuilder() {
                                             placeholder="Button-Text"
                                           />
                                         </div>
-                                      <div>
-                                        <Label>URL</Label>
-                                        <Input
-                                          value={block.content.url || ""}
-                                          onChange={(e) =>
-                                            handleUpdateBlock(block.id, {
-                                              ...block.content,
-                                              url: e.target.value,
-                                            })
-                                          }
-                                          placeholder="https://..."
-                                        />
-                                      </div>
-                                      <div className="grid grid-cols-3 gap-2">
                                         <div>
-                                          <Label>Style</Label>
-                                          <Select
-                                            value={
-                                              block.content.variant || "primary"
-                                            }
-                                            onValueChange={(value) =>
+                                          <Label>URL</Label>
+                                          <Input
+                                            value={block.content.url || ""}
+                                            onChange={(e) =>
                                               handleUpdateBlock(block.id, {
                                                 ...block.content,
-                                                variant: value,
+                                                url: e.target.value,
                                               })
                                             }
-                                          >
-                                            <SelectTrigger>
-                                              <SelectValue />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                              <SelectItem value="primary">
-                                                Primär
-                                              </SelectItem>
-                                              <SelectItem value="secondary">
-                                                Sekundär
-                                              </SelectItem>
-                                              <SelectItem value="success">
-                                                Erfolg
-                                              </SelectItem>
-                                              <SelectItem value="danger">
-                                                Gefahr
-                                              </SelectItem>
-                                            </SelectContent>
-                                          </Select>
+                                            placeholder="https://..."
+                                          />
                                         </div>
-                                        <div>
-                                          <Label>Größe</Label>
-                                          <Select
-                                            value={
-                                              block.content.size || "normal"
-                                            }
-                                            onValueChange={(value) =>
-                                              handleUpdateBlock(block.id, {
-                                                ...block.content,
-                                                size: value,
-                                              })
-                                            }
-                                          >
-                                            <SelectTrigger>
-                                              <SelectValue />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                              <SelectItem value="small">
-                                                Klein
-                                              </SelectItem>
-                                              <SelectItem value="normal">
-                                                Normal
-                                              </SelectItem>
-                                              <SelectItem value="large">
-                                                Groß
-                                              </SelectItem>
-                                            </SelectContent>
-                                          </Select>
-                                        </div>
-                                        <div>
-                                          <Label>Ausrichtung</Label>
-                                          <Select
-                                            value={
-                                              block.content.alignment ||
-                                              "center"
-                                            }
-                                            onValueChange={(value) =>
-                                              handleUpdateBlock(block.id, {
-                                                ...block.content,
-                                                alignment: value,
-                                              })
-                                            }
-                                          >
-                                            <SelectTrigger>
-                                              <SelectValue />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                              <SelectItem value="left">
-                                                Links
-                                              </SelectItem>
-                                              <SelectItem value="center">
-                                                Mittig
-                                              </SelectItem>
-                                              <SelectItem value="right">
-                                                Rechts
-                                              </SelectItem>
-                                            </SelectContent>
-                                          </Select>
+                                        <div className="grid grid-cols-3 gap-2">
+                                          <div>
+                                            <Label>Style</Label>
+                                            <Select
+                                              value={
+                                                block.content.variant ||
+                                                "primary"
+                                              }
+                                              onValueChange={(value) =>
+                                                handleUpdateBlock(block.id, {
+                                                  ...block.content,
+                                                  variant: value,
+                                                })
+                                              }
+                                            >
+                                              <SelectTrigger>
+                                                <SelectValue />
+                                              </SelectTrigger>
+                                              <SelectContent>
+                                                <SelectItem value="primary">
+                                                  Primär
+                                                </SelectItem>
+                                                <SelectItem value="secondary">
+                                                  Sekundär
+                                                </SelectItem>
+                                                <SelectItem value="success">
+                                                  Erfolg
+                                                </SelectItem>
+                                                <SelectItem value="danger">
+                                                  Gefahr
+                                                </SelectItem>
+                                              </SelectContent>
+                                            </Select>
+                                          </div>
+                                          <div>
+                                            <Label>Größe</Label>
+                                            <Select
+                                              value={
+                                                block.content.size || "normal"
+                                              }
+                                              onValueChange={(value) =>
+                                                handleUpdateBlock(block.id, {
+                                                  ...block.content,
+                                                  size: value,
+                                                })
+                                              }
+                                            >
+                                              <SelectTrigger>
+                                                <SelectValue />
+                                              </SelectTrigger>
+                                              <SelectContent>
+                                                <SelectItem value="small">
+                                                  Klein
+                                                </SelectItem>
+                                                <SelectItem value="normal">
+                                                  Normal
+                                                </SelectItem>
+                                                <SelectItem value="large">
+                                                  Groß
+                                                </SelectItem>
+                                              </SelectContent>
+                                            </Select>
+                                          </div>
+                                          <div>
+                                            <Label>Ausrichtung</Label>
+                                            <Select
+                                              value={
+                                                block.content.alignment ||
+                                                "center"
+                                              }
+                                              onValueChange={(value) =>
+                                                handleUpdateBlock(block.id, {
+                                                  ...block.content,
+                                                  alignment: value,
+                                                })
+                                              }
+                                            >
+                                              <SelectTrigger>
+                                                <SelectValue />
+                                              </SelectTrigger>
+                                              <SelectContent>
+                                                <SelectItem value="left">
+                                                  Links
+                                                </SelectItem>
+                                                <SelectItem value="center">
+                                                  Mittig
+                                                </SelectItem>
+                                                <SelectItem value="right">
+                                                  Rechts
+                                                </SelectItem>
+                                              </SelectContent>
+                                            </Select>
+                                          </div>
                                         </div>
                                       </div>
                                     </div>
+                                  )}
+
+                                  {/* Enhanced Form Editor */}
+                                  {block.type === "form" && (
+                                    <FormBlockEditor
+                                      content={
+                                        block.content as EnhancedFormBlock
+                                      }
+                                      onUpdate={(content) =>
+                                        handleUpdateBlock(block.id, content)
+                                      }
+                                    />
                                   )}
 
                                   {/* List Editor */}
@@ -1259,89 +769,81 @@ export default function WorkingPageBuilder() {
                                           placeholder="z.B. Ihre Aufgaben"
                                         />
                                       </div>
-                                      <div>
+
+                                      <div className="space-y-2">
                                         <Label>Listenpunkte</Label>
-                                        <div className="space-y-2">
-                                          {(block.content.items || []).map(
-                                            (item: any, index: number) => (
-                                              <div
-                                                key={index}
-                                                className="flex gap-2 items-center p-2 border rounded"
+                                        {(block.content.items || []).map(
+                                          (item: any, index: number) => (
+                                            <div
+                                              key={index}
+                                              className="flex gap-2 items-start"
+                                            >
+                                              <Input
+                                                value={item.emoji || ""}
+                                                onChange={(e) => {
+                                                  const newItems = [
+                                                    ...block.content.items,
+                                                  ];
+                                                  newItems[index] = {
+                                                    ...item,
+                                                    emoji: e.target.value,
+                                                  };
+                                                  handleUpdateBlock(block.id, {
+                                                    ...block.content,
+                                                    items: newItems,
+                                                  });
+                                                }}
+                                                placeholder="📋"
+                                                className="w-16"
+                                              />
+                                              <Textarea
+                                                value={item.text || ""}
+                                                onChange={(e) => {
+                                                  const newItems = [
+                                                    ...block.content.items,
+                                                  ];
+                                                  newItems[index] = {
+                                                    ...item,
+                                                    text: e.target.value,
+                                                  };
+                                                  handleUpdateBlock(block.id, {
+                                                    ...block.content,
+                                                    items: newItems,
+                                                  });
+                                                }}
+                                                placeholder="Listenpunkt..."
+                                                rows={2}
+                                                className="flex-1"
+                                              />
+                                              <Button
+                                                size="sm"
+                                                variant="outline"
+                                                onClick={() =>
+                                                  removeListItem(
+                                                    block.id,
+                                                    block.content.items,
+                                                    index,
+                                                  )
+                                                }
                                               >
-                                                <Input
-                                                  value={item.emoji || ""}
-                                                  onChange={(e) => {
-                                                    const newItems = [
-                                                      ...(block.content.items ||
-                                                        []),
-                                                    ];
-                                                    newItems[index] = {
-                                                      ...item,
-                                                      emoji: e.target.value,
-                                                    };
-                                                    handleUpdateBlock(
-                                                      block.id,
-                                                      {
-                                                        ...block.content,
-                                                        items: newItems,
-                                                      },
-                                                    );
-                                                  }}
-                                                  placeholder="📋"
-                                                  className="w-16 text-center"
-                                                />
-                                                <Textarea
-                                                  value={item.text || ""}
-                                                  onChange={(e) => {
-                                                    const newItems = [
-                                                      ...(block.content.items ||
-                                                        []),
-                                                    ];
-                                                    newItems[index] = {
-                                                      ...item,
-                                                      text: e.target.value,
-                                                    };
-                                                    handleUpdateBlock(
-                                                      block.id,
-                                                      {
-                                                        ...block.content,
-                                                        items: newItems,
-                                                      },
-                                                    );
-                                                  }}
-                                                  placeholder="Beschreibung..."
-                                                  rows={2}
-                                                  className="flex-1"
-                                                />
-                                                <Button
-                                                  size="sm"
-                                                  variant="outline"
-                                                  onClick={() =>
-                                                    removeListItem(
-                                                      block.id,
-                                                      block.content.items || [],
-                                                      index,
-                                                    )
-                                                  }
-                                                >
-                                                  <Trash2 className="h-4 w-4" />
-                                                </Button>
-                                              </div>
-                                            ),
-                                          )}
-                                          <Button
-                                            variant="outline"
-                                            onClick={() =>
-                                              addListItem(
-                                                block.id,
-                                                block.content.items || [],
-                                              )
-                                            }
-                                            className="w-full"
-                                          >
-                                            + Listenpunkt hinzufügen
-                                          </Button>
-                                        </div>
+                                                <Trash2 className="h-4 w-4" />
+                                              </Button>
+                                            </div>
+                                          ),
+                                        )}
+                                        <Button
+                                          size="sm"
+                                          variant="outline"
+                                          onClick={() =>
+                                            addListItem(
+                                              block.id,
+                                              block.content.items || [],
+                                            )
+                                          }
+                                        >
+                                          <Plus className="h-4 w-4 mr-2" />
+                                          Punkt hinzufügen
+                                        </Button>
                                       </div>
                                     </div>
                                   )}
@@ -1359,7 +861,7 @@ export default function WorkingPageBuilder() {
                                               text: e.target.value,
                                             })
                                           }
-                                          placeholder="Text eingeben"
+                                          placeholder="Ihr Text hier..."
                                           rows={4}
                                         />
                                       </div>
@@ -1397,7 +899,7 @@ export default function WorkingPageBuilder() {
                                           <Label>Schriftgröße</Label>
                                           <Select
                                             value={
-                                              block.content.fontSize || "base"
+                                              block.content.fontSize || "normal"
                                             }
                                             onValueChange={(value) =>
                                               handleUpdateBlock(block.id, {
@@ -1410,17 +912,14 @@ export default function WorkingPageBuilder() {
                                               <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
-                                              <SelectItem value="sm">
+                                              <SelectItem value="small">
                                                 Klein
                                               </SelectItem>
-                                              <SelectItem value="base">
+                                              <SelectItem value="normal">
                                                 Normal
                                               </SelectItem>
-                                              <SelectItem value="lg">
+                                              <SelectItem value="large">
                                                 Groß
-                                              </SelectItem>
-                                              <SelectItem value="xl">
-                                                Sehr groß
                                               </SelectItem>
                                             </SelectContent>
                                           </Select>
@@ -1434,82 +933,65 @@ export default function WorkingPageBuilder() {
                                     <div className="space-y-3">
                                       <div>
                                         <Label>Rich Text Editor</Label>
-                                        <div className="border rounded-md">
-                                          <div className="flex gap-1 p-2 border-b bg-gray-50">
-                                            <Button
-                                              size="sm"
-                                              variant="outline"
-                                              onClick={() => {
-                                                const newHtml =
-                                                  (block.content.html || "") +
-                                                  "<strong>Fett</strong>";
-                                                handleUpdateBlock(block.id, {
-                                                  ...block.content,
-                                                  html: newHtml,
-                                                });
-                                              }}
-                                            >
-                                              <strong>B</strong>
-                                            </Button>
-                                            <Button
-                                              size="sm"
-                                              variant="outline"
-                                              onClick={() => {
-                                                const newHtml =
-                                                  (block.content.html || "") +
-                                                  "<em>Kursiv</em>";
-                                                handleUpdateBlock(block.id, {
-                                                  ...block.content,
-                                                  html: newHtml,
-                                                });
-                                              }}
-                                            >
-                                              <em>I</em>
-                                            </Button>
-                                            <Button
-                                              size="sm"
-                                              variant="outline"
-                                              onClick={() => {
-                                                const newHtml =
-                                                  (block.content.html || "") +
-                                                  "<br>";
-                                                handleUpdateBlock(block.id, {
-                                                  ...block.content,
-                                                  html: newHtml,
-                                                });
-                                              }}
-                                            >
-                                              BR
-                                            </Button>
-                                            <Button
-                                              size="sm"
-                                              variant="outline"
-                                              onClick={() => {
-                                                const newHtml =
-                                                  (block.content.html || "") +
-                                                  "<ul><li>Listenpunkt</li></ul>";
-                                                handleUpdateBlock(block.id, {
-                                                  ...block.content,
-                                                  html: newHtml,
-                                                });
-                                              }}
-                                            >
-                                              Liste
-                                            </Button>
-                                          </div>
-                                          <Textarea
-                                            value={block.content.html || ""}
-                                            onChange={(e) =>
+                                        <div className="border rounded-md p-2 space-x-2 bg-gray-50">
+                                          <Button
+                                            size="sm"
+                                            variant="outline"
+                                            onClick={() => {
+                                              const newHtml =
+                                                (block.content.html || "") +
+                                                "<strong>Fetter Text</strong>";
                                               handleUpdateBlock(block.id, {
                                                 ...block.content,
-                                                html: e.target.value,
-                                              })
-                                            }
-                                            placeholder="<p>Formatierter Text mit HTML...</p>"
-                                            rows={6}
-                                            className="border-0 font-mono text-sm"
-                                          />
+                                                html: newHtml,
+                                              });
+                                            }}
+                                          >
+                                            Fett
+                                          </Button>
+                                          <Button
+                                            size="sm"
+                                            variant="outline"
+                                            onClick={() => {
+                                              const newHtml =
+                                                (block.content.html || "") +
+                                                "<em>Kursiver Text</em>";
+                                              handleUpdateBlock(block.id, {
+                                                ...block.content,
+                                                html: newHtml,
+                                              });
+                                            }}
+                                          >
+                                            Kursiv
+                                          </Button>
+                                          <Button
+                                            size="sm"
+                                            variant="outline"
+                                            onClick={() => {
+                                              const newHtml =
+                                                (block.content.html || "") +
+                                                "<ul><li>Listenpunkt</li></ul>";
+                                              handleUpdateBlock(block.id, {
+                                                ...block.content,
+                                                html: newHtml,
+                                              });
+                                            }}
+                                          >
+                                            Liste
+                                          </Button>
                                         </div>
+                                        <Textarea
+                                          value={block.content.html || ""}
+                                          onChange={(e) =>
+                                            handleUpdateBlock(block.id, {
+                                              ...block.content,
+                                              html: e.target.value,
+                                            })
+                                          }
+                                          placeholder="<p>Formatierter Text mit HTML...</p>"
+                                          rows={6}
+                                          className="border-0 font-mono text-sm"
+                                        />
                                       </div>
                                       <div>
                                         <Label>Vorschau</Label>
@@ -1621,41 +1103,115 @@ export default function WorkingPageBuilder() {
                                     </div>
                                   )}
 
-                                  {/* Spacer Editor */}
-                                  {block.type === "spacer" && (
+                                  {/* Heading Editor */}
+                                  {block.type === "heading" && (
                                     <div className="space-y-3">
                                       <div>
-                                        <Label>Höhe (in Pixel)</Label>
+                                        <Label>Überschrift</Label>
                                         <Input
-                                          type="number"
-                                          value={block.content.height || 40}
+                                          value={block.content.text || ""}
                                           onChange={(e) =>
                                             handleUpdateBlock(block.id, {
                                               ...block.content,
-                                              height:
-                                                parseInt(e.target.value) || 40,
+                                              text: e.target.value,
                                             })
                                           }
-                                          min="10"
-                                          max="500"
+                                          placeholder="Ihre Überschrift"
                                         />
                                       </div>
-                                      <div>
-                                        <Label>Hintergrundfarbe</Label>
-                                        <Input
-                                          type="color"
-                                          value={
-                                            block.content.backgroundColor ||
-                                            "#ffffff"
-                                          }
-                                          onChange={(e) =>
-                                            handleUpdateBlock(block.id, {
-                                              ...block.content,
-                                              backgroundColor: e.target.value,
-                                            })
-                                          }
-                                        />
+                                      <div className="grid grid-cols-2 gap-2">
+                                        <div>
+                                          <Label>Größe</Label>
+                                          <Select
+                                            value={
+                                              block.content.level?.toString() ||
+                                              "2"
+                                            }
+                                            onValueChange={(value) =>
+                                              handleUpdateBlock(block.id, {
+                                                ...block.content,
+                                                level: parseInt(value),
+                                              })
+                                            }
+                                          >
+                                            <SelectTrigger>
+                                              <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                              <SelectItem value="1">
+                                                H1 (Sehr groß)
+                                              </SelectItem>
+                                              <SelectItem value="2">
+                                                H2 (Groß)
+                                              </SelectItem>
+                                              <SelectItem value="3">
+                                                H3 (Mittel)
+                                              </SelectItem>
+                                              <SelectItem value="4">
+                                                H4 (Klein)
+                                              </SelectItem>
+                                            </SelectContent>
+                                          </Select>
+                                        </div>
+                                        <div>
+                                          <Label>Ausrichtung</Label>
+                                          <Select
+                                            value={
+                                              block.content.alignment || "left"
+                                            }
+                                            onValueChange={(value) =>
+                                              handleUpdateBlock(block.id, {
+                                                ...block.content,
+                                                alignment: value,
+                                              })
+                                            }
+                                          >
+                                            <SelectTrigger>
+                                              <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                              <SelectItem value="left">
+                                                Links
+                                              </SelectItem>
+                                              <SelectItem value="center">
+                                                Mittig
+                                              </SelectItem>
+                                              <SelectItem value="right">
+                                                Rechts
+                                              </SelectItem>
+                                            </SelectContent>
+                                          </Select>
+                                        </div>
                                       </div>
+                                    </div>
+                                  )}
+
+                                  {/* Spacer Editor */}
+                                  {block.type === "spacer" && (
+                                    <div className="space-y-2">
+                                      <Label>Höhe (in Pixel)</Label>
+                                      <Input
+                                        type="number"
+                                        value={block.content.height || 40}
+                                        onChange={(e) =>
+                                          handleUpdateBlock(block.id, {
+                                            ...block.content,
+                                            height:
+                                              parseInt(e.target.value) || 40,
+                                          })
+                                        }
+                                        min="10"
+                                        max="200"
+                                      />
+                                      <div className="text-xs text-gray-500">
+                                        Aktuell: {block.content.height || 40}px
+                                      </div>
+                                      <div
+                                        className="border-2 border-dashed border-gray-300 rounded"
+                                        style={{
+                                          height: `${block.content.height || 40}px`,
+                                        }}
+                                      />
                                     </div>
                                   )}
                                 </CardContent>
@@ -1673,7 +1229,7 @@ export default function WorkingPageBuilder() {
                 {/* Add Block */}
                 <Card>
                   <CardHeader>
-                    <CardTitle>➕ Block hinzufügen</CardTitle>
+                    <CardTitle>Block hinzufügen</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-2">
                     <Button
@@ -1738,28 +1294,25 @@ export default function WorkingPageBuilder() {
                 {/* Page Info */}
                 <Card>
                   <CardHeader>
-                    <CardTitle>ℹ️ Seiten-Info</CardTitle>
+                    <CardTitle>Seiten-Info</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-2 text-sm">
+                  <CardContent className="space-y-3">
                     <div className="flex justify-between">
-                      <span>Status:</span>
+                      <span className="text-sm text-gray-600">Status:</span>
                       <span
-                        className={
+                        className={`text-sm font-medium ${
                           page.published ? "text-green-600" : "text-orange-600"
-                        }
+                        }`}
                       >
                         {page.published ? "✅ Veröffentlicht" : "⏳ Entwurf"}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Blöcke:</span>
+                      <span className="text-sm text-gray-600">Blöcke:</span>
                       <span>{page.blocks.length}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span>URL:</span>
-                      <code className="text-xs bg-gray-100 px-1 rounded">
-                        /jobs/{page.slug}
-                      </code>
+                    <div className="text-xs text-gray-500 break-all">
+                      URL: /jobs/{page.slug}
                     </div>
                   </CardContent>
                 </Card>
@@ -1767,20 +1320,35 @@ export default function WorkingPageBuilder() {
             </div>
           </TabsContent>
 
-          {/* Body Style Tab */}
+          {/* Body Style Tab with Templates */}
           <TabsContent value="bodystyle">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Palette className="h-5 w-5" />
-                  Body Style Einstellungen
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <h3 className="font-medium text-lg">Farben</h3>
-                    <div className="space-y-3">
+            <div className="space-y-6">
+              {/* Style Template Selector */}
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle>🎨 Body-Style Templates</CardTitle>
+                    <QuickBodyStyleSelector
+                      onSelectTemplate={handleSelectBodyStyleTemplate}
+                    />
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 mb-4">
+                    Wählen Sie ein vorgefertigtes Design-Template oder passen
+                    Sie die Einstellungen manuell an.
+                  </p>
+                </CardContent>
+              </Card>
+
+              {/* Manual Style Options */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Farben</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
                       <div>
                         <Label>Primärfarbe</Label>
                         <Input
@@ -1842,167 +1410,160 @@ export default function WorkingPageBuilder() {
                         />
                       </div>
                     </div>
-                  </div>
+                  </CardContent>
+                </Card>
 
-                  <div className="space-y-4">
-                    <h3 className="font-medium text-lg">Typografie & Layout</h3>
-                    <div className="space-y-3">
-                      <div>
-                        <Label>Schriftart</Label>
-                        <Select
-                          value={page.design?.fontFamily || "inter"}
-                          onValueChange={(value) =>
-                            updatePage(page.id, {
-                              design: { ...page.design, fontFamily: value },
-                            })
-                          }
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="inter">
-                              Inter (Modern)
-                            </SelectItem>
-                            <SelectItem value="roboto">
-                              Roboto (Klassisch)
-                            </SelectItem>
-                            <SelectItem value="opensans">
-                              Open Sans (Lesbar)
-                            </SelectItem>
-                            <SelectItem value="poppins">
-                              Poppins (Freundlich)
-                            </SelectItem>
-                            <SelectItem value="playfair">
-                              Playfair (Elegant)
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Layout</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <Label>Schriftart</Label>
+                      <Select
+                        value={page.design?.fontFamily || "montserrat"}
+                        onValueChange={(value) =>
+                          updatePage(page.id, {
+                            design: { ...page.design, fontFamily: value },
+                          })
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="montserrat">Montserrat</SelectItem>
+                          <SelectItem value="inter">Inter</SelectItem>
+                          <SelectItem value="roboto">Roboto</SelectItem>
+                          <SelectItem value="open-sans">Open Sans</SelectItem>
+                          <SelectItem value="lato">Lato</SelectItem>
+                          <SelectItem value="poppins">Poppins</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
 
-                      <div>
-                        <Label>Container-Breite</Label>
-                        <Select
-                          value={page.design?.containerWidth || "normal"}
-                          onValueChange={(value) =>
-                            updatePage(page.id, {
-                              design: { ...page.design, containerWidth: value },
-                            })
-                          }
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="narrow">
-                              Schmal (768px)
-                            </SelectItem>
-                            <SelectItem value="normal">
-                              Normal (1024px)
-                            </SelectItem>
-                            <SelectItem value="wide">Breit (1280px)</SelectItem>
-                            <SelectItem value="full">Volle Breite</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+                    <div>
+                      <Label>Container-Breite</Label>
+                      <Select
+                        value={page.design?.containerWidth || "normal"}
+                        onValueChange={(value) =>
+                          updatePage(page.id, {
+                            design: { ...page.design, containerWidth: value },
+                          })
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="narrow">Schmal (768px)</SelectItem>
+                          <SelectItem value="normal">
+                            Normal (1024px)
+                          </SelectItem>
+                          <SelectItem value="wide">Breit (1280px)</SelectItem>
+                          <SelectItem value="full">Volle Breite</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
 
-                      <div>
-                        <Label>Body Padding</Label>
-                        <Input
-                          type="number"
-                          value={page.design?.bodyPadding || 16}
-                          onChange={(e) =>
-                            updatePage(page.id, {
-                              design: {
-                                ...page.design,
-                                bodyPadding: parseInt(e.target.value) || 16,
-                              },
-                            })
-                          }
-                          placeholder="16"
-                        />
-                      </div>
-
-                      <div>
-                        <Label>Zeilenhöhe</Label>
-                        <Select
-                          value={page.design?.lineHeight || "normal"}
-                          onValueChange={(value) =>
-                            updatePage(page.id, {
-                              design: { ...page.design, lineHeight: value },
-                            })
-                          }
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="tight">Eng (1.25)</SelectItem>
-                            <SelectItem value="normal">Normal (1.5)</SelectItem>
-                            <SelectItem value="relaxed">
-                              Entspannt (1.75)
-                            </SelectItem>
-                            <SelectItem value="loose">Locker (2.0)</SelectItem>
-                          </SelectContent>
-                        </Select>
+                    <div>
+                      <Label>Body Padding</Label>
+                      <Input
+                        type="range"
+                        min="8"
+                        max="64"
+                        step="4"
+                        value={page.design?.bodyPadding || 16}
+                        onChange={(e) =>
+                          updatePage(page.id, {
+                            design: {
+                              ...page.design,
+                              bodyPadding: parseInt(e.target.value),
+                            },
+                          })
+                        }
+                      />
+                      <div className="text-xs text-gray-500 mt-1">
+                        {page.design?.bodyPadding || 16}px
                       </div>
                     </div>
-                  </div>
-                </div>
 
-                <div className="border-t pt-4">
-                  <h3 className="font-medium text-lg mb-3">Vorschau</h3>
+                    <div>
+                      <Label>Zeilenhöhe</Label>
+                      <Select
+                        value={page.design?.lineHeight || "normal"}
+                        onValueChange={(value) =>
+                          updatePage(page.id, {
+                            design: { ...page.design, lineHeight: value },
+                          })
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="tight">Kompakt</SelectItem>
+                          <SelectItem value="normal">Normal</SelectItem>
+                          <SelectItem value="relaxed">Entspannt</SelectItem>
+                          <SelectItem value="loose">Locker</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Preview */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Vorschau</CardTitle>
+                </CardHeader>
+                <CardContent>
                   <div
-                    className="border rounded-lg p-6 min-h-[200px]"
+                    className="border rounded-lg p-6 space-y-4"
                     style={{
                       backgroundColor:
                         page.design?.backgroundColor || "#ffffff",
                       color: page.design?.textColor || "#000000",
-                      fontFamily: page.design?.fontFamily || "Inter",
-                      lineHeight:
-                        page.design?.lineHeight === "tight"
-                          ? "1.25"
-                          : page.design?.lineHeight === "relaxed"
-                            ? "1.75"
-                            : page.design?.lineHeight === "loose"
-                              ? "2.0"
-                              : "1.5",
+                      fontFamily: page.design?.fontFamily || "montserrat",
+                      padding: `${page.design?.bodyPadding || 16}px`,
                     }}
                   >
                     <h2
+                      className="text-2xl font-bold"
                       style={{ color: page.design?.primaryColor || "#3b82f6" }}
                     >
-                      Beispiel-Überschrift
+                      Beispiel Überschrift
                     </h2>
                     <p
                       style={{
                         color: page.design?.secondaryColor || "#6b7280",
+                        lineHeight: page.design?.lineHeight || "normal",
                       }}
                     >
-                      Dies ist ein Beispieltext, um zu zeigen, wie Ihre
-                      Einstellungen aussehen werden.
+                      Dies ist ein Beispieltext, um zu zeigen, wie Ihr Design
+                      aussehen wird.
                     </p>
                     <button
-                      className="px-4 py-2 rounded mt-4"
+                      className="px-4 py-2 rounded text-white font-medium"
                       style={{
                         backgroundColor: page.design?.primaryColor || "#3b82f6",
-                        color: "white",
                       }}
                     >
-                      Beispiel-Button
+                      Beispiel Button
                     </button>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
-          {/* Settings Tab */}
+          {/* Settings Tab with Footer Styling */}
           <TabsContent value="settings">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Seiteneinstellungen</CardTitle>
+                  <CardTitle>SEO Einstellungen</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
@@ -2014,7 +1575,6 @@ export default function WorkingPageBuilder() {
                       }
                     />
                   </div>
-
                   <div>
                     <Label>URL-Slug</Label>
                     <Input
@@ -2024,7 +1584,6 @@ export default function WorkingPageBuilder() {
                       }
                     />
                   </div>
-
                   <div>
                     <Label>SEO Titel</Label>
                     <Input
@@ -2035,7 +1594,6 @@ export default function WorkingPageBuilder() {
                       placeholder={page.title}
                     />
                   </div>
-
                   <div>
                     <Label>SEO Beschreibung</Label>
                     <Textarea
@@ -2043,7 +1601,7 @@ export default function WorkingPageBuilder() {
                       onChange={(e) =>
                         updatePage(page.id, { seoDescription: e.target.value })
                       }
-                      placeholder="Beschreibung für Suchmaschinen..."
+                      placeholder="Kurze Beschreibung für Suchmaschinen..."
                       rows={3}
                     />
                   </div>
@@ -2052,7 +1610,7 @@ export default function WorkingPageBuilder() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Footer-Einstellungen</CardTitle>
+                  <CardTitle>Footer Einstellungen</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-center justify-between">
@@ -2094,83 +1652,81 @@ export default function WorkingPageBuilder() {
                       placeholder="Zusätzlicher Text..."
                     />
                   </div>
-                </CardContent>
-              </Card>
 
-              {/* Footer Styling */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Footer Design</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+                  {/* Footer Styling moved here */}
+                  <div className="border-t pt-4 space-y-4">
+                    <h4 className="font-medium">Footer Design</h4>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Footer Hintergrundfarbe</Label>
+                        <Input
+                          type="color"
+                          value={
+                            page.design?.footerBackgroundColor || "#f8fafc"
+                          }
+                          onChange={(e) =>
+                            updatePage(page.id, {
+                              design: {
+                                ...page.design,
+                                footerBackgroundColor: e.target.value,
+                              },
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Footer Textfarbe</Label>
+                        <Input
+                          type="color"
+                          value={page.design?.footerTextColor || "#64748b"}
+                          onChange={(e) =>
+                            updatePage(page.id, {
+                              design: {
+                                ...page.design,
+                                footerTextColor: e.target.value,
+                              },
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+
                     <div className="space-y-2">
-                      <Label>Footer Hintergrundfarbe</Label>
+                      <Label>Footer Padding</Label>
                       <Input
-                        type="color"
-                        value={page.design?.footerBackgroundColor || "#f8fafc"}
+                        type="range"
+                        min="8"
+                        max="64"
+                        step="4"
+                        value={page.design?.footerPadding || 24}
                         onChange={(e) =>
                           updatePage(page.id, {
                             design: {
                               ...page.design,
-                              footerBackgroundColor: e.target.value,
+                              footerPadding: parseInt(e.target.value),
                             },
                           })
                         }
                       />
+                      <div className="text-xs text-gray-500">
+                        {page.design?.footerPadding || 24}px
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      <Label>Footer Textfarbe</Label>
-                      <Input
-                        type="color"
-                        value={page.design?.footerTextColor || "#64748b"}
-                        onChange={(e) =>
+
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        checked={page.design?.footerBorder || false}
+                        onCheckedChange={(checked) =>
                           updatePage(page.id, {
                             design: {
                               ...page.design,
-                              footerTextColor: e.target.value,
+                              footerBorder: checked,
                             },
                           })
                         }
                       />
+                      <Label>Footer Rahmen anzeigen</Label>
                     </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Footer Padding</Label>
-                    <Input
-                      type="range"
-                      min="8"
-                      max="64"
-                      step="4"
-                      value={page.design?.footerPadding || 24}
-                      onChange={(e) =>
-                        updatePage(page.id, {
-                          design: {
-                            ...page.design,
-                            footerPadding: parseInt(e.target.value),
-                          },
-                        })
-                      }
-                    />
-                    <div className="text-xs text-gray-500">
-                      {page.design?.footerPadding || 24}px
-                    </div>
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      checked={page.design?.footerBorder || false}
-                      onCheckedChange={(checked) =>
-                        updatePage(page.id, {
-                          design: {
-                            ...page.design,
-                            footerBorder: checked,
-                          },
-                        })
-                      }
-                    />
-                    <Label>Footer Rahmen anzeigen</Label>
                   </div>
                 </CardContent>
               </Card>
@@ -2203,6 +1759,13 @@ export default function WorkingPageBuilder() {
           setEditingButtonBlock(null);
         }}
         onSelect={handleSelectButtonTemplate}
+      />
+
+      {/* Body Style Template Modal */}
+      <BodyStyleTemplateSelector
+        isOpen={showBodyStyleTemplates}
+        onClose={() => setShowBodyStyleTemplates(false)}
+        onSelect={handleSelectBodyStyleTemplate}
       />
     </div>
   );
