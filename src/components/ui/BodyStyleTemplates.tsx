@@ -16,6 +16,27 @@ import {
   Code,
   Heart,
   Zap,
+  TrendingUp,
+  Users,
+} from "lucide-react";
+import { demoTemplates } from "@/data/demoTemplates";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  CheckCircle,
+  Sparkles,
+  Palette,
+  Briefcase,
+  Code,
+  Heart,
+  Zap,
 } from "lucide-react";
 
 export interface BodyStyleTemplate {
@@ -214,6 +235,36 @@ const bodyStyleTemplates: BodyStyleTemplate[] = [
   },
 ];
 
+// Convert Demo Templates to Body Style Templates
+const demoTemplateStyles: BodyStyleTemplate[] = demoTemplates.map(
+  (template) => ({
+    id: `demo-${template.id}`,
+    name: `${template.name} (Demo)`,
+    category: template.category as any,
+    preview: (
+      <div className="w-full h-20 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+        <div className="text-white text-center">
+          <div className="text-sm font-bold">{template.name}</div>
+          <div className="text-xs opacity-80">Demo Template Style</div>
+        </div>
+      </div>
+    ),
+    config: template.template.design || {
+      primaryColor: "#2563eb",
+      secondaryColor: "#64748b",
+      backgroundColor: "#ffffff",
+      textColor: "#1f2937",
+      fontFamily: "montserrat",
+      containerWidth: "normal",
+      bodyPadding: 24,
+      lineHeight: "normal",
+    },
+  }),
+);
+
+// Combine base templates with demo template styles
+const allBodyStyleTemplates = [...bodyStyleTemplates, ...demoTemplateStyles];
+
 interface BodyStyleTemplateSelectorProps {
   isOpen: boolean;
   onClose: () => void;
@@ -244,8 +295,8 @@ export function BodyStyleTemplateSelector({
 
   const filteredTemplates =
     selectedCategory === "all"
-      ? bodyStyleTemplates
-      : bodyStyleTemplates.filter((t) => t.category === selectedCategory);
+      ? allBodyStyleTemplates
+      : allBodyStyleTemplates.filter((t) => t.category === selectedCategory);
 
   const handleSelect = (template: BodyStyleTemplate) => {
     onSelect(template);
