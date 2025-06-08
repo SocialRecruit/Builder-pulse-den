@@ -11,6 +11,7 @@ import LandingPage from "./pages/LandingPage";
 import UserManagement from "./pages/UserManagement";
 import Privacy from "./pages/Privacy";
 import Impressum from "./pages/Impressum";
+import DemoMuseumsmitarbeiter from "./pages/DemoMuseumsmitarbeiter";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,10 @@ const App = () => (
           <Route path="/page-builder/:pageId" element={<PageBuilder />} />
           <Route path="/user-management" element={<UserManagement />} />
           <Route path="/jobs/:slug" element={<LandingPage />} />
+          <Route
+            path="/demo/museumsmitarbeiter"
+            element={<DemoMuseumsmitarbeiter />}
+          />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/impressum" element={<Impressum />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

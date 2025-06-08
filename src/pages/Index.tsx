@@ -66,7 +66,11 @@ const Index = () => {
               <Edit className="h-5 w-5 mr-2" />
               Jetzt starten
             </Button>
-            <Button size="lg" variant="outline">
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={() => navigate("/demo/museumsmitarbeiter")}
+            >
               <Eye className="h-5 w-5 mr-2" />
               Demo ansehen
             </Button>
@@ -186,7 +190,7 @@ const Index = () => {
 
             <Card>
               <CardHeader>
-                <CardTitle>🎨 Design-Flexibilität</CardTitle>
+                <CardTitle>🎨 Design-Flexibilit��t</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
