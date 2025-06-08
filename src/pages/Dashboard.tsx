@@ -327,13 +327,103 @@ export default function Dashboard() {
         </div>
 
         {/* Pages List */}
-        <PageList
-          pages={filteredPages}
-          onEdit={handleEditPage}
-          onView={handleViewPage}
-          onDuplicate={handleDuplicatePage}
-          onDelete={deletePage}
-        />
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-gray-900">
+              Meine Landing Pages
+            </h2>
+            {pages.length > 0 && (
+              <p className="text-sm text-gray-600">
+                {filteredPages.length} von {pages.length} Seiten
+              </p>
+            )}
+          </div>
+
+          {/* Manual Page Cards if PageList fails */}
+          {pages.length > 0 ? (
+            <div className="space-y-4">
+              {filteredPages.map((page) => (
+                <div
+                  key={page.id}
+                  className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center space-x-3">
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {page.title}
+                      </h3>
+                      <Badge variant={page.published ? "default" : "secondary"}>
+                        {page.published ? "Veröffentlicht" : "Entwurf"}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleViewPage(page)}
+                      >
+                        Vorschau
+                      </Button>
+                      <Button
+                        variant="default"
+                        size="sm"
+                        onClick={() => handleEditPage(page)}
+                      >
+                        Bearbeiten
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 text-sm text-gray-600">
+                    <p>
+                      URL:{" "}
+                      <code className="bg-gray-100 px-1 rounded text-xs">
+                        /jobs/{page.slug}
+                      </code>
+                    </p>
+                    <p>
+                      Erstellt:{" "}
+                      {new Date(page.createdAt).toLocaleDateString("de-DE")}
+                    </p>
+                    <p>Blöcke: {page.blocks.length}</p>
+                    {page.header.text && (
+                      <p className="text-gray-700 line-clamp-2 mt-2">
+                        "{page.header.text}"
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
+              <div className="space-y-4">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
+                  <Plus className="w-8 h-8 text-gray-400" />
+                </div>
+                <h3 className="text-lg font-medium text-gray-900">
+                  Keine Landing Pages vorhanden
+                </h3>
+                <p className="text-gray-500 max-w-sm mx-auto">
+                  Erstellen Sie Ihre erste Landing Page für Social Recruiting
+                  oder probieren Sie ein Template aus.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <Button onClick={() => setIsCreateDialogOpen(true)}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Neue Seite erstellen
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => navigate("/templates")}
+                  >
+                    Template verwenden
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </main>
     </div>
   );
