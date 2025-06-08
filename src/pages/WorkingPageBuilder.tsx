@@ -27,7 +27,7 @@ import {
 } from "lucide-react";
 import { useLandingPages } from "@/hooks/useLandingPages";
 import { MediaGallery } from "@/components/ui/MediaGallery";
-import { EmojiPicker } from "@/components/ui/EmojiPicker";
+// import { EmojiPicker } from "@/components/ui/EmojiPicker"; // Temporär deaktiviert
 import {
   ButtonTemplateSelector,
   type ButtonTemplate,
@@ -55,11 +55,9 @@ export default function WorkingPageBuilder() {
   const [activeTab, setActiveTab] = useState("content");
   const [showMediaGallery, setShowMediaGallery] = useState(false);
   const [showButtonTemplates, setShowButtonTemplates] = useState(false);
-  const [editingButtonBlock, setEditingButtonBlock] = useState<string | null>(
-    null,
-  );
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [editingEmojiItem, setEditingEmojiItem] = useState<{
+  const [editingButtonBlock, setEditingButtonBlock] = useState<string | null>(null);
+  // const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  // const [editingEmojiItem, setEditingEmojiItem] = useState<{blockId: string, itemIndex: number} | null>(null);
     blockId: string;
     itemIndex: number;
   } | null>(null);
@@ -180,10 +178,11 @@ export default function WorkingPageBuilder() {
     });
   };
 
-  // Emoji Picker Handler
+  // Emoji Picker Handler - temporär deaktiviert
+  /*
   const handleEmojiSelect = (emoji: string) => {
     if (editingEmojiItem) {
-      const block = page.blocks.find((b) => b.id === editingEmojiItem.blockId);
+      const block = page.blocks.find(b => b.id === editingEmojiItem.blockId);
       if (block && block.content.items) {
         const newItems = [...block.content.items];
         newItems[editingEmojiItem.itemIndex] = {
@@ -198,6 +197,7 @@ export default function WorkingPageBuilder() {
       setEditingEmojiItem(null);
     }
   };
+  */
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -417,7 +417,7 @@ export default function WorkingPageBuilder() {
                             <SelectContent>
                               <SelectItem value="none">Kein Overlay</SelectItem>
                               <SelectItem value="black">Schwarz</SelectItem>
-                              <SelectItem value="white">Wei��</SelectItem>
+                              <SelectItem value="white">Weiß</SelectItem>
                               <SelectItem value="custom">
                                 Benutzerdefiniert
                               </SelectItem>
