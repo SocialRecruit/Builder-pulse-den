@@ -15,6 +15,7 @@ import DemoMuseumsmitarbeiter from "./pages/DemoMuseumsmitarbeiter";
 import Analytics from "./pages/Analytics";
 import TemplateGallery from "./pages/TemplateGallery";
 import Collaboration from "./pages/Collaboration";
+import ButtonGalleryDemo from "./pages/ButtonGalleryDemo";
 
 const queryClient = new QueryClient();
 
