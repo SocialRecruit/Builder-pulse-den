@@ -362,7 +362,11 @@ export default function EnhancedLandingPageRenderer() {
             className="absolute inset-0"
             style={{
               backgroundColor:
-                page.header.overlay === "black" ? "#000000" : "#ffffff",
+                page.header.overlay === "custom"
+                  ? page.header.overlayColor || "#000000"
+                  : page.header.overlay === "black"
+                    ? "#000000"
+                    : "#ffffff",
               opacity: (page.header.overlayOpacity || 40) / 100,
             }}
           />
@@ -386,7 +390,13 @@ export default function EnhancedLandingPageRenderer() {
             )}
 
             {/* Main Title */}
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold font-montserrat leading-tight">
+            <h1
+              className="font-bold font-montserrat leading-tight"
+              style={{
+                fontSize: `${page.header.titleFontSize || 48}px`,
+                lineHeight: "1.2",
+              }}
+            >
               {page.header.title}
             </h1>
 
