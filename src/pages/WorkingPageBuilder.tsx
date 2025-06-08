@@ -180,6 +180,25 @@ export default function WorkingPageBuilder() {
     });
   };
 
+  // Emoji Picker Handler
+  const handleEmojiSelect = (emoji: string) => {
+    if (editingEmojiItem) {
+      const block = page.blocks.find((b) => b.id === editingEmojiItem.blockId);
+      if (block && block.content.items) {
+        const newItems = [...block.content.items];
+        newItems[editingEmojiItem.itemIndex] = {
+          ...newItems[editingEmojiItem.itemIndex],
+          emoji: emoji,
+        };
+        handleUpdateBlock(editingEmojiItem.blockId, {
+          ...block.content,
+          items: newItems,
+        });
+      }
+      setEditingEmojiItem(null);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -398,7 +417,7 @@ export default function WorkingPageBuilder() {
                             <SelectContent>
                               <SelectItem value="none">Kein Overlay</SelectItem>
                               <SelectItem value="black">Schwarz</SelectItem>
-                              <SelectItem value="white">Weiß</SelectItem>
+                              <SelectItem value="white">Wei��</SelectItem>
                               <SelectItem value="custom">
                                 Benutzerdefiniert
                               </SelectItem>
