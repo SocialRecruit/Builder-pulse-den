@@ -39,6 +39,13 @@ export const useLandingPages = () => {
         showImpressum: true,
         showPrivacy: true,
       },
+      design: {
+        primaryColor: "#3b82f6",
+        secondaryColor: "#6b7280",
+        backgroundColor: "#ffffff",
+        fontFamily: "inter",
+        containerWidth: "normal",
+      },
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       createdBy: currentUser?.id || "unknown",
@@ -176,24 +183,53 @@ export const useLandingPages = () => {
 const getDefaultBlockContent = (blockType: ContentBlock["type"]) => {
   switch (blockType) {
     case "heading":
-      return { text: "Neue Überschrift", level: 2 };
+      return {
+        text: "Neue Überschrift",
+        level: 2,
+        alignment: "left",
+        color: "#000000",
+      };
     case "text":
-      return { text: "Hier können Sie Ihren Text eingeben..." };
+      return {
+        text: "Hier können Sie Ihren Text eingeben...",
+        alignment: "left",
+        fontSize: "base",
+      };
     case "richtext":
       return { html: "<p>Hier können Sie formatierten Text eingeben...</p>" };
     case "image":
-      return { src: "", alt: "Bild", caption: "" };
+      return {
+        src: "",
+        alt: "Bild",
+        caption: "",
+        size: "normal",
+        alignment: "center",
+      };
     case "button":
       return {
         text: "Jetzt bewerben",
-        type: "apply",
-        style: "primary",
-        url: "#",
+        action: "apply",
+        variant: "primary",
+        size: "normal",
+        alignment: "center",
+        url: "",
+        fullWidth: false,
       };
     case "form":
-      return { embedCode: "", provider: "funnelforms" };
+      return {
+        title: "Bewerbungsformular",
+        email: "",
+        fields: [],
+        embedCode: "",
+      };
+    case "sourcecode":
+      return {
+        code: "<div>Ihr HTML Code hier...</div>",
+        language: "html",
+        sandbox: true,
+      };
     case "spacer":
-      return { height: 40 };
+      return { height: 40, backgroundColor: "transparent" };
     default:
       return {};
   }
