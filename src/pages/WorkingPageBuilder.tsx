@@ -31,6 +31,10 @@ import {
   defaultFormBlock,
   EnhancedFormBlock,
 } from "@/components/landing-builder/blocks/FormBlock";
+import {
+  ButtonTemplateSelector,
+  ButtonTemplate,
+} from "@/components/ui/ButtonTemplateSelector";
 import { toast } from "sonner";
 
 export default function WorkingPageBuilder() {
@@ -43,6 +47,10 @@ export default function WorkingPageBuilder() {
   const [activeBlock, setActiveBlock] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("content");
   const [showMediaGallery, setShowMediaGallery] = useState(false);
+  const [showButtonTemplates, setShowButtonTemplates] = useState(false);
+  const [editingButtonBlock, setEditingButtonBlock] = useState<string | null>(
+    null,
+  );
 
   if (!pageId || !page) {
     return (
@@ -81,10 +89,13 @@ export default function WorkingPageBuilder() {
       | "form"
       | "spacer",
   ) => {
+    let newBlockId: string;
+
     // For form blocks, use the enhanced form structure
     if (type === "form") {
+      newBlockId = Date.now().toString();
       const newBlock = {
-        id: Date.now().toString(),
+        id: newBlockId,
         type: "form" as const,
         content: defaultFormBlock,
         order: page.blocks.length,
@@ -93,8 +104,12 @@ export default function WorkingPageBuilder() {
         blocks: [...page.blocks, newBlock],
       });
     } else {
-      addBlock(page.id, type);
+      const newBlock = addBlock(page.id, type);
+      newBlockId = newBlock.id;
     }
+
+    // Auto-expand the newly added block
+    setActiveBlock(newBlockId);
     toast.success("Block hinzugefügt!");
   };
 
@@ -1703,7 +1718,7 @@ export default function WorkingPageBuilder() {
                           page.published ? "text-green-600" : "text-orange-600"
                         }
                       >
-                        {page.published ? "✅ Veröffentlicht" : "�� Entwurf"}
+                        {page.published ? "✅ Veröffentlicht" : "⏳ Entwurf"}
                       </span>
                     </div>
                     <div className="flex justify-between">
