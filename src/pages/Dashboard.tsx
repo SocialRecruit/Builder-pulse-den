@@ -40,6 +40,9 @@ import {
 import { PageList } from "@/components/landing-builder/PageList";
 import { useLandingPages } from "@/hooks/useLandingPages";
 import { useUsers } from "@/hooks/useUsers";
+import { QuickTemplateSelector } from "@/components/ui/TemplateSelector";
+import { DemoTemplate } from "@/data/demoTemplates";
+import { generateId, generateUniqueSlug } from "@/lib/storage";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -84,6 +87,20 @@ export default function Dashboard() {
   const handleLogout = () => {
     logout();
     navigate("/");
+  };
+
+  const handleSelectTemplate = (template: DemoTemplate) => {
+    const newPage = {
+      ...template.template,
+      id: generateId(),
+      slug: generateUniqueSlug(template.template.title),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      createdBy: currentUser?.id || "admin",
+    };
+
+    updatePage(newPage.id, newPage);
+    navigate(`/page-builder/${newPage.id}`);
   };
 
   if (loading) {
@@ -374,23 +391,11 @@ export default function Dashboard() {
               </CardContent>
             </Card>
 
-            {/* Templates */}
-            <Card
-              className="hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group"
-              onClick={() => navigate("/templates")}
-            >
-              <CardContent className="p-8 text-center">
-                <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-purple-200 transition-colors duration-300">
-                  <Layout className="w-8 h-8 text-purple-600" />
-                </div>
-                <h4 className="text-lg font-bold text-gray-900 mb-2">
-                  Templates
-                </h4>
-                <p className="text-gray-600 text-sm">
-                  Vorgefertigte Vorlagen nutzen
-                </p>
-              </CardContent>
-            </Card>
+            {/* Demo Templates */}
+            <QuickTemplateSelector
+              onSelectTemplate={handleSelectTemplate}
+              variant="card"
+            />
           </div>
         </div>
 
