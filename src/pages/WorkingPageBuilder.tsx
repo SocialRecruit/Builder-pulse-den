@@ -2008,10 +2008,104 @@ export default function WorkingPageBuilder() {
                   </div>
                 </CardContent>
               </Card>
+
+              {/* Footer Styling */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Footer Design</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Footer Hintergrundfarbe</Label>
+                      <Input
+                        type="color"
+                        value={page.design?.footerBackgroundColor || "#f8fafc"}
+                        onChange={(e) =>
+                          updatePage(page.id, {
+                            design: {
+                              ...page.design,
+                              footerBackgroundColor: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Footer Textfarbe</Label>
+                      <Input
+                        type="color"
+                        value={page.design?.footerTextColor || "#64748b"}
+                        onChange={(e) =>
+                          updatePage(page.id, {
+                            design: {
+                              ...page.design,
+                              footerTextColor: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Footer Padding</Label>
+                    <Input
+                      type="range"
+                      min="8"
+                      max="64"
+                      step="4"
+                      value={page.design?.footerPadding || 24}
+                      onChange={(e) =>
+                        updatePage(page.id, {
+                          design: {
+                            ...page.design,
+                            footerPadding: parseInt(e.target.value),
+                          },
+                        })
+                      }
+                    />
+                    <div className="text-xs text-gray-500">
+                      {page.design?.footerPadding || 24}px
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      checked={page.design?.footerBorder || false}
+                      onCheckedChange={(checked) =>
+                        updatePage(page.id, {
+                          design: {
+                            ...page.design,
+                            footerBorder: checked,
+                          },
+                        })
+                      }
+                    />
+                    <Label>Footer Rahmen anzeigen</Label>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Media Gallery Modal */}
+      <MediaGallery
+        isOpen={showMediaGallery}
+        onClose={() => setShowMediaGallery(false)}
+        onSelect={(imageUrl, alt) => {
+          updatePage(page.id, {
+            header: {
+              ...page.header,
+              image: imageUrl,
+            },
+          });
+          setShowMediaGallery(false);
+        }}
+        selectedUrl={page.header.image}
+      />
     </div>
   );
 }
