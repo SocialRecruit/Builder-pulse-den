@@ -22,8 +22,15 @@ import {
   Trash2,
   Palette,
   Settings,
+  ImageIcon,
 } from "lucide-react";
 import { useLandingPages } from "@/hooks/useLandingPages";
+import { MediaGallery } from "@/components/ui/MediaGallery";
+import {
+  FormBlockEditor,
+  defaultFormBlock,
+  EnhancedFormBlock,
+} from "@/components/landing-builder/blocks/FormBlock";
 import { toast } from "sonner";
 
 export default function WorkingPageBuilder() {
