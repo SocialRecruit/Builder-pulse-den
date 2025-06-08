@@ -42,6 +42,7 @@ export default function WorkingPageBuilder() {
   const page = pages.find((p) => p.id === pageId);
   const [activeBlock, setActiveBlock] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("content");
+  const [showMediaGallery, setShowMediaGallery] = useState(false);
 
   if (!pageId || !page) {
     return (
