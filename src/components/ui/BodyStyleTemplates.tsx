@@ -20,24 +20,6 @@ import {
   Users,
 } from "lucide-react";
 import { demoTemplates } from "@/data/demoTemplates";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  CheckCircle,
-  Sparkles,
-  Palette,
-  Briefcase,
-  Code,
-  Heart,
-  Zap,
-} from "lucide-react";
 
 export interface BodyStyleTemplate {
   id: string;
@@ -46,6 +28,9 @@ export interface BodyStyleTemplate {
     | "business"
     | "creative"
     | "tech"
+    | "marketing"
+    | "sales"
+    | "hr"
     | "healthcare"
     | "minimal"
     | "bold";
@@ -66,7 +51,7 @@ export interface BodyStyleTemplate {
   };
 }
 
-const bodyStyleTemplates: BodyStyleTemplate[] = [
+const baseBodyStyleTemplates: BodyStyleTemplate[] = [
   {
     id: "corporate-blue",
     name: "Corporate Blue",
@@ -237,33 +222,57 @@ const bodyStyleTemplates: BodyStyleTemplate[] = [
 
 // Convert Demo Templates to Body Style Templates
 const demoTemplateStyles: BodyStyleTemplate[] = demoTemplates.map(
-  (template) => ({
-    id: `demo-${template.id}`,
-    name: `${template.name} (Demo)`,
-    category: template.category as any,
-    preview: (
-      <div className="w-full h-20 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
-        <div className="text-white text-center">
-          <div className="text-sm font-bold">{template.name}</div>
-          <div className="text-xs opacity-80">Demo Template Style</div>
+  (template) => {
+    const categoryMap = {
+      marketing: "marketing" as const,
+      tech: "tech" as const,
+      sales: "sales" as const,
+      hr: "hr" as const,
+      healthcare: "healthcare" as const,
+    };
+
+    return {
+      id: `demo-${template.id}`,
+      name: `${template.name} Style`,
+      category: categoryMap[template.category] || "business",
+      preview: (
+        <div className="w-full h-20 rounded-lg overflow-hidden relative">
+          <img
+            src={template.preview}
+            alt={template.name}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex items-center">
+            <div className="text-white ml-3">
+              <div className="text-sm font-bold">{template.name}</div>
+              <div className="text-xs opacity-90">Demo Style</div>
+            </div>
+          </div>
         </div>
-      </div>
-    ),
-    config: template.template.design || {
-      primaryColor: "#2563eb",
-      secondaryColor: "#64748b",
-      backgroundColor: "#ffffff",
-      textColor: "#1f2937",
-      fontFamily: "montserrat",
-      containerWidth: "normal",
-      bodyPadding: 24,
-      lineHeight: "normal",
-    },
-  }),
+      ),
+      config: {
+        primaryColor: template.template.design?.primaryColor || "#2563eb",
+        secondaryColor: template.template.design?.secondaryColor || "#64748b",
+        backgroundColor: template.template.design?.backgroundColor || "#ffffff",
+        textColor: template.template.design?.textColor || "#1f2937",
+        fontFamily: template.template.design?.fontFamily || "montserrat",
+        containerWidth: template.template.design?.containerWidth || "normal",
+        bodyPadding: template.template.design?.bodyPadding || 24,
+        lineHeight: template.template.design?.lineHeight || "normal",
+        footerBackgroundColor: template.template.design?.footerBackgroundColor,
+        footerTextColor: template.template.design?.footerTextColor,
+        footerPadding: template.template.design?.footerPadding,
+        footerBorder: template.template.design?.footerBorder,
+      },
+    };
+  },
 );
 
 // Combine base templates with demo template styles
-const allBodyStyleTemplates = [...bodyStyleTemplates, ...demoTemplateStyles];
+const allBodyStyleTemplates = [
+  ...baseBodyStyleTemplates,
+  ...demoTemplateStyles,
+];
 
 interface BodyStyleTemplateSelectorProps {
   isOpen: boolean;
@@ -284,10 +293,18 @@ export function BodyStyleTemplateSelector({
     { id: "creative", name: "Kreativ", icon: Palette, color: "bg-orange-500" },
     { id: "tech", name: "Tech", icon: Code, color: "bg-purple-500" },
     {
+      id: "marketing",
+      name: "Marketing",
+      icon: TrendingUp,
+      color: "bg-indigo-500",
+    },
+    { id: "sales", name: "Sales", icon: Briefcase, color: "bg-red-500" },
+    { id: "hr", name: "Personal", icon: Users, color: "bg-green-500" },
+    {
       id: "healthcare",
       name: "Gesundheit",
       icon: Heart,
-      color: "bg-green-500",
+      color: "bg-emerald-500",
     },
     { id: "minimal", name: "Minimal", icon: Zap, color: "bg-gray-500" },
     { id: "bold", name: "Bold", icon: Zap, color: "bg-red-500" },
@@ -308,7 +325,13 @@ export function BodyStyleTemplateSelector({
       business: { name: "Business", color: "bg-blue-100 text-blue-800" },
       creative: { name: "Kreativ", color: "bg-orange-100 text-orange-800" },
       tech: { name: "Tech", color: "bg-purple-100 text-purple-800" },
-      healthcare: { name: "Gesundheit", color: "bg-green-100 text-green-800" },
+      marketing: { name: "Marketing", color: "bg-indigo-100 text-indigo-800" },
+      sales: { name: "Sales", color: "bg-red-100 text-red-800" },
+      hr: { name: "Personal", color: "bg-green-100 text-green-800" },
+      healthcare: {
+        name: "Gesundheit",
+        color: "bg-emerald-100 text-emerald-800",
+      },
       minimal: { name: "Minimal", color: "bg-gray-100 text-gray-800" },
       bold: { name: "Bold", color: "bg-red-100 text-red-800" },
     };
@@ -322,14 +345,15 @@ export function BodyStyleTemplateSelector({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl max-h-[85vh] overflow-hidden">
+      <DialogContent className="max-w-6xl max-h-[85vh] overflow-hidden">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl">
             <Palette className="w-6 h-6 text-purple-600" />
             Body-Style Template auswählen
           </DialogTitle>
           <p className="text-gray-600">
-            Wählen Sie ein Design-Template für die gesamte Landing Page
+            Wählen Sie ein Design-Template für die gesamte Landing Page oder
+            nutzen Sie Demo-Template-Styles
           </p>
         </DialogHeader>
 
@@ -364,6 +388,8 @@ export function BodyStyleTemplateSelector({
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredTemplates.map((template) => {
                 const categoryInfo = getCategoryInfo(template.category);
+                const isDemoTemplate = template.id.startsWith("demo-");
+
                 return (
                   <Card
                     key={template.id}
@@ -375,9 +401,16 @@ export function BodyStyleTemplateSelector({
                         <CardTitle className="text-base font-bold text-gray-900">
                           {template.name}
                         </CardTitle>
-                        <Badge className={categoryInfo.color}>
-                          {categoryInfo.name}
-                        </Badge>
+                        <div className="flex gap-2">
+                          <Badge className={categoryInfo.color}>
+                            {categoryInfo.name}
+                          </Badge>
+                          {isDemoTemplate && (
+                            <Badge variant="outline" className="text-xs">
+                              Demo
+                            </Badge>
+                          )}
+                        </div>
                       </div>
                     </CardHeader>
 
@@ -447,6 +480,26 @@ export function BodyStyleTemplateSelector({
               <p>Keine Style-Templates in dieser Kategorie gefunden</p>
             </div>
           )}
+
+          {/* Info Box */}
+          <div className="bg-indigo-50 p-4 rounded-lg">
+            <div className="flex items-start space-x-3">
+              <div className="bg-indigo-500 rounded-full p-1">
+                <Sparkles className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <h4 className="font-medium text-indigo-900">
+                  Style-Template vs Demo-Template
+                </h4>
+                <p className="text-sm text-indigo-700 mt-1">
+                  <strong>Style-Templates</strong> ändern nur das Design der
+                  aktuellen Seite.
+                  <strong> Demo-Templates</strong> nutzen die Design-Stile aus
+                  den vorgefertigten Landing Pages.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
