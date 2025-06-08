@@ -19,6 +19,8 @@ export interface LandingPageHeader {
   alignment?: string;
   overlay?: string;
   overlayOpacity?: number;
+  overlayColor?: string; // Custom overlay color
+  titleFontSize?: number; // Title font size in pixels (24-96px)
 }
 
 export interface ContentBlock {

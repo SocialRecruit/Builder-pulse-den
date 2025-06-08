@@ -378,7 +378,7 @@ export default function WorkingPageBuilder() {
 
                       <div className="space-y-4">
                         <div>
-                          <Label>Overlay-Farbe</Label>
+                          <Label>Overlay-Typ</Label>
                           <Select
                             value={page.header.overlay || "black"}
                             onValueChange={(value) =>
@@ -394,9 +394,46 @@ export default function WorkingPageBuilder() {
                               <SelectItem value="none">Kein Overlay</SelectItem>
                               <SelectItem value="black">Schwarz</SelectItem>
                               <SelectItem value="white">Weiß</SelectItem>
+                              <SelectItem value="custom">
+                                Benutzerdefiniert
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
+
+                        {page.header.overlay === "custom" && (
+                          <div>
+                            <Label>Overlay-Farbe</Label>
+                            <div className="flex gap-2">
+                              <Input
+                                type="color"
+                                value={page.header.overlayColor || "#000000"}
+                                onChange={(e) =>
+                                  updatePage(page.id, {
+                                    header: {
+                                      ...page.header,
+                                      overlayColor: e.target.value,
+                                    },
+                                  })
+                                }
+                                className="w-12 h-10 p-1 rounded"
+                              />
+                              <Input
+                                value={page.header.overlayColor || "#000000"}
+                                onChange={(e) =>
+                                  updatePage(page.id, {
+                                    header: {
+                                      ...page.header,
+                                      overlayColor: e.target.value,
+                                    },
+                                  })
+                                }
+                                placeholder="#000000"
+                                className="flex-1"
+                              />
+                            </div>
+                          </div>
+                        )}
 
                         <div>
                           <Label>Overlay-Transparenz</Label>
@@ -404,7 +441,7 @@ export default function WorkingPageBuilder() {
                             type="range"
                             min="0"
                             max="80"
-                            step="10"
+                            step="5"
                             value={page.header.overlayOpacity || 40}
                             onChange={(e) =>
                               updatePage(page.id, {
@@ -414,9 +451,14 @@ export default function WorkingPageBuilder() {
                                 },
                               })
                             }
+                            className="w-full"
                           />
-                          <div className="text-xs text-gray-500 mt-1">
-                            {page.header.overlayOpacity || 40}%
+                          <div className="flex justify-between text-xs text-gray-500">
+                            <span>0%</span>
+                            <span className="font-medium text-blue-600">
+                              {page.header.overlayOpacity || 40}%
+                            </span>
+                            <span>80%</span>
                           </div>
                         </div>
                       </div>
