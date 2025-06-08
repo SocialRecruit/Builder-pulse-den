@@ -1581,7 +1581,7 @@ export default function WorkingPageBuilder() {
               </div>
 
               {/* Sidebar */}
-              <div className="space-y-6">
+              <div className="lg:col-span-1 space-y-4">
                 {/* Add Block */}
                 <Card>
                   <CardHeader>
