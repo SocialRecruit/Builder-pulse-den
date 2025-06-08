@@ -495,6 +495,91 @@ export default function WorkingPageBuilder() {
                         />
                       </div>
 
+                      <div>
+                        <Label>Titel-Schriftgröße</Label>
+                        <Input
+                          type="range"
+                          min="24"
+                          max="96"
+                          step="4"
+                          value={page.header.titleFontSize || 48}
+                          onChange={(e) =>
+                            updatePage(page.id, {
+                              header: {
+                                ...page.header,
+                                titleFontSize: parseInt(e.target.value),
+                              },
+                            })
+                          }
+                          className="w-full"
+                        />
+                        <div className="flex justify-between text-xs text-gray-500">
+                          <span>Klein (24px)</span>
+                          <span className="font-medium text-blue-600">
+                            {page.header.titleFontSize || 48}px
+                          </span>
+                          <span>Groß (96px)</span>
+                        </div>
+                        <div className="flex gap-2 mt-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() =>
+                              updatePage(page.id, {
+                                header: {
+                                  ...page.header,
+                                  titleFontSize: 32,
+                                },
+                              })
+                            }
+                          >
+                            Klein
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() =>
+                              updatePage(page.id, {
+                                header: {
+                                  ...page.header,
+                                  titleFontSize: 48,
+                                },
+                              })
+                            }
+                          >
+                            Normal
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() =>
+                              updatePage(page.id, {
+                                header: {
+                                  ...page.header,
+                                  titleFontSize: 64,
+                                },
+                              })
+                            }
+                          >
+                            Groß
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() =>
+                              updatePage(page.id, {
+                                header: {
+                                  ...page.header,
+                                  titleFontSize: 80,
+                                },
+                              })
+                            }
+                          >
+                            Sehr groß
+                          </Button>
+                        </div>
+                      </div>
+
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                           <Label>📍 Standort</Label>
