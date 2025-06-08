@@ -16,6 +16,7 @@ import Analytics from "./pages/Analytics";
 import TemplateGallery from "./pages/TemplateGallery";
 import Collaboration from "./pages/Collaboration";
 import ButtonGalleryDemo from "./pages/ButtonGalleryDemo";
+import DashboardTest from "./pages/DashboardTest";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard-test" element={<DashboardTest />} />
           <Route
             path="/page-builder/:pageId"
             element={<WorkingPageBuilder />}
