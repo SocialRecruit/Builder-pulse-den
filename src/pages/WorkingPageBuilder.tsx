@@ -214,19 +214,37 @@ export default function WorkingPageBuilder() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-4">
                         <div>
-                          <Label>Header-Bild URL</Label>
-                          <Input
-                            value={page.header.image || ""}
-                            onChange={(e) =>
-                              updatePage(page.id, {
-                                header: {
-                                  ...page.header,
-                                  image: e.target.value,
-                                },
-                              })
-                            }
-                            placeholder="https://beispiel.com/header-bild.jpg"
-                          />
+                          <Label>Header-Bild</Label>
+                          <div className="flex gap-2">
+                            <Input
+                              value={page.header.image || ""}
+                              onChange={(e) =>
+                                updatePage(page.id, {
+                                  header: {
+                                    ...page.header,
+                                    image: e.target.value,
+                                  },
+                                })
+                              }
+                              placeholder="https://beispiel.com/header-bild.jpg"
+                            />
+                            <Button
+                              variant="outline"
+                              onClick={() => setShowMediaGallery(true)}
+                              className="px-3"
+                            >
+                              <ImageIcon className="w-4 h-4" />
+                            </Button>
+                          </div>
+                          {page.header.image && (
+                            <div className="mt-2">
+                              <img
+                                src={page.header.image}
+                                alt="Header Vorschau"
+                                className="w-full h-20 object-cover rounded border"
+                              />
+                            </div>
+                          )}
                         </div>
 
                         <div>
