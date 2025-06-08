@@ -30,10 +30,14 @@ import {
 import { HeaderSection } from "@/components/landing-builder/HeaderSection";
 import { BlockEditor } from "@/components/landing-builder/BlockTypes";
 import { BlockRenderer } from "@/components/landing-builder/BlockRenderer";
-import { useLandingPages } from "@/hooks/useLandingPages";
-import { useUsers } from "@/hooks/useUsers";
-import { ContentBlock } from "@/types/landing-page";
-import { toast } from "sonner";
+import { useLandingPages } from '@/hooks/useLandingPages';
+import { useUsers } from '@/hooks/useUsers';
+import { ContentBlock } from '@/types/landing-page';
+import { QRCodeGenerator } from '@/components/landing-builder/QRCodeGenerator';
+import { SocialMediaPreview } from '@/components/landing-builder/SocialMediaPreview';
+import { SEOChecker } from '@/components/landing-builder/SEOChecker';
+import { ABTestManager } from '@/components/landing-builder/ABTestManager';
+import { toast } from 'sonner';
 
 export default function PageBuilder() {
   const { pageId } = useParams<{ pageId: string }>();
@@ -148,6 +152,17 @@ export default function PageBuilder() {
                 />
               </div>
 
+              <QRCodeGenerator
+                pageUrl={`${window.location.origin}/jobs/${page.slug}`}
+                pageTitle={page.title}
+              />
+
+              <SocialMediaPreview page={page} />
+
+              <SEOChecker page={page} />
+
+              <ABTestManager page={page} />
+
               <Button variant="outline" onClick={handlePreview}>
                 <Eye className="h-4 w-4 mr-2" />
                 Vorschau
@@ -256,12 +271,32 @@ export default function PageBuilder() {
                     <Button
                       variant="outline"
                       className="w-full justify-start"
-                      onClick={() => setActiveTab("settings")}
+                      onClick={() => setActiveTab('settings')}
                     >
                       <Settings className="h-4 w-4 mr-2" />
                       Einstellungen
                     </Button>
                   </CardContent>
+                </Card>
+
+                {/* Advanced Features */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Erweiterte Features</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <QRCodeGenerator
+                      pageUrl={`${window.location.origin}/jobs/${page.slug}`}
+                      pageTitle={page.title}
+                    />
+
+                    <SocialMediaPreview page={page} />
+
+                    <SEOChecker page={page} />
+
+                    <ABTestManager page={page} />
+                  </CardContent>
+                </Card>
                 </Card>
               </div>
             </div>

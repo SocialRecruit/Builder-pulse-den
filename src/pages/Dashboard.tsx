@@ -115,20 +115,22 @@ export default function Dashboard() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem
-                    onClick={() => navigate("/user-management")}
-                  >
-                    <Users className="h-4 w-4 mr-2" />
-                    Benutzerverwaltung
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Settings className="h-4 w-4 mr-2" />
-                    Einstellungen
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleLogout}>
-                    <LogOut className="h-4 w-4 mr-2" />
-                    Abmelden
-                  </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate('/analytics')}>
+                <BarChart3 className="h-4 w-4 mr-2" />
+                Analytics
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate('/templates')}>
+                <Layout className="h-4 w-4 mr-2" />
+                Templates
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate('/user-management')}>
+                <Users className="h-4 w-4 mr-2" />
+                Benutzerverwaltung
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Settings className="h-4 w-4 mr-2" />
+                Einstellungen
+              </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -195,8 +197,54 @@ export default function Dashboard() {
         </div>
 
         {/* Actions Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
-          <div className="relative flex-1 max-w-md">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Button
+              onClick={() => navigate('/templates')}
+              variant="outline"
+              className="h-auto p-6 flex flex-col items-center space-y-2"
+            >
+              <Layout className="h-8 w-8 text-purple-600" />
+              <div>
+                <div className="font-semibold">Template Gallery</div>
+                <div className="text-xs text-gray-600">Vorgefertigte Designs</div>
+              </div>
+            </Button>
+
+            <Button
+              onClick={() => navigate('/analytics')}
+              variant="outline"
+              className="h-auto p-6 flex flex-col items-center space-y-2"
+            >
+              <BarChart3 className="h-8 w-8 text-green-600" />
+              <div>
+                <div className="font-semibold">Analytics</div>
+                <div className="text-xs text-gray-600">Performance Tracking</div>
+              </div>
+            </Button>
+
+            <Button
+              onClick={() => navigate('/user-management')}
+              variant="outline"
+              className="h-auto p-6 flex flex-col items-center space-y-2"
+            >
+              <Users className="h-8 w-8 text-blue-600" />
+              <div>
+                <div className="font-semibold">Team</div>
+                <div className="text-xs text-gray-600">Benutzerverwaltung</div>
+              </div>
+            </Button>
+
+            <Button
+              onClick={() => setIsCreateDialogOpen(true)}
+              className="h-auto p-6 flex flex-col items-center space-y-2 bg-blue-600 hover:bg-blue-700"
+            >
+              <Plus className="h-8 w-8" />
+              <div>
+                <div className="font-semibold">Neue Seite</div>
+                <div className="text-xs opacity-90">Schnell erstellen</div>
+              </div>
+            </Button>
+          </div>
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <Input
               placeholder="Seiten durchsuchen..."
