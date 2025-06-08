@@ -15,6 +15,7 @@ export interface LandingPageHeader {
   startDate?: string;
   employmentType?: string;
   height?: string;
+  customHeight?: number; // Custom height in pixels (0-1000px)
   alignment?: string;
   overlay?: string;
   overlayOpacity?: number;
