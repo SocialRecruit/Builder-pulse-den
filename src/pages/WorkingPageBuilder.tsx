@@ -54,8 +54,9 @@ export default function WorkingPageBuilder() {
   const [activeTab, setActiveTab] = useState("content");
   const [showMediaGallery, setShowMediaGallery] = useState(false);
   const [showButtonTemplates, setShowButtonTemplates] = useState(false);
-  const [showBodyStyleTemplates, setShowBodyStyleTemplates] = useState(false);
-  const [editingButtonBlock, setEditingButtonBlock] = useState<string | null>(
+  const [editingButtonBlock, setEditingButtonBlock] = useState<string | null>(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [editingEmojiItem, setEditingEmojiItem] = useState<{blockId: string, itemIndex: number} | null>(null);
     null,
   );
 
