@@ -929,20 +929,24 @@ export default function WorkingPageBuilder() {
                                               key={index}
                                               className="flex gap-2 items-start"
                                             >
-                                              <Button
-                                                variant="outline"
-                                                size="sm"
-                                                className="w-16 h-10 text-lg p-0 flex items-center justify-center"
-                                                onClick={() => {
-                                                  setEditingEmojiItem({
-                                                    blockId: block.id,
-                                                    itemIndex: index,
+                                              <Input
+                                                value={item.emoji || ""}
+                                                onChange={(e) => {
+                                                  const newItems = [
+                                                    ...block.content.items,
+                                                  ];
+                                                  newItems[index] = {
+                                                    ...item,
+                                                    emoji: e.target.value,
+                                                  };
+                                                  handleUpdateBlock(block.id, {
+                                                    ...block.content,
+                                                    items: newItems,
                                                   });
-                                                  setShowEmojiPicker(true);
                                                 }}
-                                              >
-                                                {item.emoji || "😀"}
-                                              </Button>
+                                                placeholder="📋"
+                                                className="w-16"
+                                              />
                                               <Textarea
                                                 value={item.text || ""}
                                                 onChange={(e) => {
