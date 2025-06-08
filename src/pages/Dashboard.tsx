@@ -1,0 +1,267 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Plus,
+  Search,
+  Users,
+  Settings,
+  LogOut,
+  MoreVertical,
+} from "lucide-react";
+import { PageList } from "@/components/landing-builder/PageList";
+import { useLandingPages } from "@/hooks/useLandingPages";
+import { useUsers } from "@/hooks/useUsers";
+import { cn } from "@/lib/utils";
+
+export default function Dashboard() {
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [newPageTitle, setNewPageTitle] = useState("");
+
+  const { pages, loading, createPage, duplicatePage, deletePage } =
+    useLandingPages();
+  const { currentUser, logout } = useUsers();
+
+  const filteredPages = pages.filter(
+    (page) =>
+      page.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      page.slug.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
+  const handleCreatePage = () => {
+    if (!newPageTitle.trim()) return;
+
+    const newPage = createPage(newPageTitle.trim());
+    setNewPageTitle("");
+    setIsCreateDialogOpen(false);
+    navigate(`/page-builder/${newPage.id}`);
+  };
+
+  const handleEditPage = (page: any) => {
+    navigate(`/page-builder/${page.id}`);
+  };
+
+  const handleViewPage = (page: any) => {
+    navigate(`/jobs/${page.slug}`);
+  };
+
+  const handleDuplicatePage = (pageId: string) => {
+    const duplicated = duplicatePage(pageId);
+    if (duplicated) {
+      navigate(`/page-builder/${duplicated.id}`);
+    }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+          <p className="mt-2 text-gray-600">Laden...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <h1 className="text-2xl font-bold text-gray-900">
+                Landing Page Builder
+              </h1>
+              <Badge
+                variant="outline"
+                className="text-blue-600 border-blue-200"
+              >
+                Social Recruiting
+              </Badge>
+            </div>
+
+            <div className="flex items-center space-x-3">
+              <span className="text-sm text-gray-600">
+                Willkommen, {currentUser?.name}
+              </span>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm">
+                    <MoreVertical className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    onClick={() => navigate("/user-management")}
+                  >
+                    <Users className="h-4 w-4 mr-2" />
+                    Benutzerverwaltung
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Settings className="h-4 w-4 mr-2" />
+                    Einstellungen
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Abmelden
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-8">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Gesamte Seiten
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{pages.length}</div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Veröffentlicht
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {pages.filter((p) => p.published).length}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Entwürfe</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {pages.filter((p) => !p.published).length}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Diese Woche</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {
+                  pages.filter((p) => {
+                    const pageDate = new Date(p.createdAt);
+                    const weekAgo = new Date();
+                    weekAgo.setDate(weekAgo.getDate() - 7);
+                    return pageDate > weekAgo;
+                  }).length
+                }
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Actions Bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Input
+              placeholder="Seiten durchsuchen..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+
+          <Dialog
+            open={isCreateDialogOpen}
+            onOpenChange={setIsCreateDialogOpen}
+          >
+            <DialogTrigger asChild>
+              <Button className="bg-blue-600 hover:bg-blue-700">
+                <Plus className="h-4 w-4 mr-2" />
+                Neue Seite erstellen
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Neue Landing Page erstellen</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Seitentitel</label>
+                  <Input
+                    value={newPageTitle}
+                    onChange={(e) => setNewPageTitle(e.target.value)}
+                    placeholder="z.B. Museumsmitarbeiter"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleCreatePage();
+                      }
+                    }}
+                  />
+                </div>
+                <div className="flex justify-end space-x-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsCreateDialogOpen(false)}
+                  >
+                    Abbrechen
+                  </Button>
+                  <Button
+                    onClick={handleCreatePage}
+                    disabled={!newPageTitle.trim()}
+                  >
+                    Erstellen
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+
+        {/* Pages List */}
+        <PageList
+          pages={filteredPages}
+          onEdit={handleEditPage}
+          onView={handleViewPage}
+          onDuplicate={handleDuplicatePage}
+          onDelete={deletePage}
+        />
+      </main>
+    </div>
+  );
+}
