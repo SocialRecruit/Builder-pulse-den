@@ -81,7 +81,20 @@ export default function WorkingPageBuilder() {
       | "form"
       | "spacer",
   ) => {
-    addBlock(page.id, type);
+    // For form blocks, use the enhanced form structure
+    if (type === "form") {
+      const newBlock = {
+        id: Date.now().toString(),
+        type: "form" as const,
+        content: defaultFormBlock,
+        order: page.blocks.length,
+      };
+      updatePage(page.id, {
+        blocks: [...page.blocks, newBlock],
+      });
+    } else {
+      addBlock(page.id, type);
+    }
     toast.success("Block hinzugefügt!");
   };
 
