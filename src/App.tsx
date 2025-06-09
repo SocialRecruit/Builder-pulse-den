@@ -38,10 +38,6 @@ const App = () => (
           <Route path="/dashboard-test" element={<DashboardTest />} />
           <Route
             path="/page-builder/:pageId"
-            element={<WorkingPageBuilderMinimal />}
-          />
-          <Route
-            path="/page-builder-full/:pageId"
             element={<WorkingPageBuilder />}
           />
           <Route

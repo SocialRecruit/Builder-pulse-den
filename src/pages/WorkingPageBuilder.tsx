@@ -27,7 +27,7 @@ import {
 } from "lucide-react";
 import { useLandingPages } from "@/hooks/useLandingPages";
 import { MediaGallery } from "@/components/ui/MediaGallery";
-// import { EmojiPicker } from "@/components/ui/EmojiPicker"; // Temporär deaktiviert
+import { EnhancedEmojiPicker } from "@/components/ui/EnhancedEmojiPicker";
 import {
   ButtonTemplateSelector,
   type ButtonTemplate,
@@ -58,9 +58,11 @@ export default function WorkingPageBuilder() {
   const [editingButtonBlock, setEditingButtonBlock] = useState<string | null>(
     null,
   );
-  // Emoji Picker temporär deaktiviert
-  // const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  // const [editingEmojiItem, setEditingEmojiItem] = useState<{blockId: string, itemIndex: number} | null>(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [editingEmojiItem, setEditingEmojiItem] = useState<{
+    blockId: string;
+    itemIndex: number;
+  } | null>(null);
 
   if (!pageId || !page) {
     return (
@@ -178,11 +180,10 @@ export default function WorkingPageBuilder() {
     });
   };
 
-  // Emoji Picker Handler - temporär deaktiviert
-  /*
+  // Enhanced Emoji Picker Handler
   const handleEmojiSelect = (emoji: string) => {
     if (editingEmojiItem) {
-      const block = page.blocks.find(b => b.id === editingEmojiItem.blockId);
+      const block = page.blocks.find((b) => b.id === editingEmojiItem.blockId);
       if (block && block.content.items) {
         const newItems = [...block.content.items];
         newItems[editingEmojiItem.itemIndex] = {
@@ -193,11 +194,13 @@ export default function WorkingPageBuilder() {
           ...block.content,
           items: newItems,
         });
+        toast.success(
+          `Emoji ${emoji || "entfernt"} ${emoji ? "hinzugefügt" : ""}`,
+        );
       }
       setEditingEmojiItem(null);
     }
   };
-  */
 
   return (
     <div className="min-h-screen bg-gray-50">
