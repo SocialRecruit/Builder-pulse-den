@@ -190,7 +190,7 @@ const Index = () => {
 
             <Card>
               <CardHeader>
-                <CardTitle>🎨 Design-Flexibilit��t</CardTitle>
+                <CardTitle>🎨 Design-Flexibilität</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
@@ -254,7 +254,7 @@ const Index = () => {
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <h4 className="text-lg font-semibold mb-4">
-                Landing Page Builder
+                &nbsp;Landing Page Builder
               </h4>
               <p className="text-gray-400">
                 Die professionelle Lösung für Social Recruiting Landing Pages.
