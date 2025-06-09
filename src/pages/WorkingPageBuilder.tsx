@@ -24,6 +24,10 @@ import {
   Settings,
   ImageIcon,
   Sparkles,
+  ChevronUp,
+  ChevronDown,
+  Copy,
+  Zap,
 } from "lucide-react";
 import { useLandingPages } from "@/hooks/useLandingPages";
 import { MediaGallery } from "@/components/ui/MediaGallery";
@@ -199,6 +203,50 @@ export default function WorkingPageBuilder() {
         );
       }
       setEditingEmojiItem(null);
+    }
+  };
+
+  // Block Reorder Functions
+  const moveBlockUp = (blockId: string) => {
+    const blockIndex = page.blocks.findIndex((b) => b.id === blockId);
+    if (blockIndex > 0) {
+      const newBlocks = [...page.blocks];
+      const temp = newBlocks[blockIndex].order;
+      newBlocks[blockIndex].order = newBlocks[blockIndex - 1].order;
+      newBlocks[blockIndex - 1].order = temp;
+
+      updatePage(page.id, { blocks: newBlocks });
+      toast.success("Block nach oben verschoben");
+    }
+  };
+
+  const moveBlockDown = (blockId: string) => {
+    const blockIndex = page.blocks.findIndex((b) => b.id === blockId);
+    if (blockIndex < page.blocks.length - 1) {
+      const newBlocks = [...page.blocks];
+      const temp = newBlocks[blockIndex].order;
+      newBlocks[blockIndex].order = newBlocks[blockIndex + 1].order;
+      newBlocks[blockIndex + 1].order = temp;
+
+      updatePage(page.id, { blocks: newBlocks });
+      toast.success("Block nach unten verschoben");
+    }
+  };
+
+  // Block Copy Function
+  const copyBlock = (blockId: string) => {
+    const blockToCopy = page.blocks.find((b) => b.id === blockId);
+    if (blockToCopy) {
+      const newBlock = {
+        ...blockToCopy,
+        id: Date.now().toString(),
+        order: Math.max(...page.blocks.map((b) => b.order)) + 1,
+      };
+
+      const newBlocks = [...page.blocks, newBlock];
+      updatePage(page.id, { blocks: newBlocks });
+      setActiveBlock(newBlock.id);
+      toast.success("Block kopiert!");
     }
   };
 
