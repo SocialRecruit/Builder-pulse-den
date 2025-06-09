@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Palette, Box, Shadow, Spacing } from "lucide-react";
+import { Palette, Box, Layers, Spacing } from "lucide-react";
 
 export interface BlockStyling {
   // Container options
@@ -128,7 +128,7 @@ export function BlockStyleOptions({
               Farben
             </TabsTrigger>
             <TabsTrigger value="effects" className="flex items-center gap-1">
-              <Shadow className="w-3 h-3" />
+              <Layers className="w-3 h-3" />
               Effekte
             </TabsTrigger>
           </TabsList>
@@ -579,7 +579,7 @@ export function BlockStyleOptions({
           <div
             className={`
               transition-all duration-300 relative
-              ${styling.hasContainer ? "border" : ""} 
+              ${styling.hasContainer ? "border" : ""}
               ${styling.hasShadow ? `shadow-${styling.shadowSize}` : ""}
               ${styling.alignment === "center" ? "mx-auto" : ""}
               ${styling.alignment === "right" ? "ml-auto" : ""}
