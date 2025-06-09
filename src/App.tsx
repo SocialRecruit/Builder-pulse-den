@@ -6,15 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
-import WorkingPageBuilder from "./pages/WorkingPageBuilder";
 import WorkingPageBuilderFixed from "./pages/WorkingPageBuilderFixed";
-import UltimatePageBuilder from "./pages/UltimatePageBuilder";
 import UltimatePageBuilderComplete from "./pages/UltimatePageBuilderComplete";
-import EnhancedPageBuilderStable from "./pages/EnhancedPageBuilderStable";
-import EnhancedPageBuilderComplete from "./pages/EnhancedPageBuilderComplete";
-import WorkingPageBuilderMinimal from "./pages/WorkingPageBuilderMinimal";
-import WorkingPageBuilderSimple from "./pages/WorkingPageBuilderSimple";
-import TestPageBuilder from "./pages/TestPageBuilder";
 import EnhancedLandingPageRenderer from "./pages/EnhancedLandingPageRenderer";
 import EnhancedLandingPageRendererComplete from "./pages/EnhancedLandingPageRendererComplete";
 import UserManagement from "./pages/UserManagement";
@@ -43,6 +36,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard-test" element={<DashboardTest />} />
+
+          {/* Page Builder Routes */}
           <Route
             path="/page-builder/:pageId"
             element={<UltimatePageBuilderComplete />}
@@ -51,20 +46,25 @@ const App = () => (
             path="/page-builder-classic/:pageId"
             element={<WorkingPageBuilderFixed />}
           />
+
+          {/* Landing Page Routes */}
           <Route
-            path="/test-page-builder/:pageId"
-            element={<TestPageBuilder />}
+            path="/jobs/:slug"
+            element={<EnhancedLandingPageRendererComplete />}
           />
           <Route
-            path="/simple-page-builder/:pageId"
-            element={<WorkingPageBuilderSimple />}
+            path="/jobs-classic/:slug"
+            element={<EnhancedLandingPageRenderer />}
           />
-          <Route path="/user-management" element={<UserManagement />} />
-          <Route path="/jobs/:slug" element={<EnhancedLandingPageRenderer />} />
+
+          {/* Demo Pages */}
           <Route
             path="/demo/museumsmitarbeiter"
             element={<DemoMuseumsmitarbeiter />}
           />
+
+          {/* Feature Pages */}
+          <Route path="/user-management" element={<UserManagement />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/templates" element={<TemplateGallery />} />
           <Route path="/collaboration" element={<Collaboration />} />
@@ -73,8 +73,12 @@ const App = () => (
           <Route path="/template-test" element={<TemplateTestPage />} />
           <Route path="/test-demo" element={<TestDemo />} />
           <Route path="/code-export" element={<CodeExport />} />
+
+          {/* Static Pages */}
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/impressum" element={<Impressum />} />
+
+          {/* Fallback */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
