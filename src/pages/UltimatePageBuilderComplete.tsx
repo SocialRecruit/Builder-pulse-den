@@ -1852,7 +1852,7 @@ export default function UltimatePageBuilderComplete() {
                         {page.header.title || "Beispiel Titel"}
                       </h3>
                       <p className="text-sm mb-3">
-                        Dies ist eine Vorschau Ihres gewählten Designs. Hier
+                        Dies ist eine Vorschau Ihres gew��hlten Designs. Hier
                         können Sie sehen, wie Text und Farben zusammenwirken.
                       </p>
                       <button
@@ -2069,7 +2069,7 @@ export default function UltimatePageBuilderComplete() {
         }}
       />
 
-      <BodyStyleTemplates
+      <BodyStyleTemplateSelector
         isOpen={showBodyStyleTemplates}
         onClose={() => setShowBodyStyleTemplates(false)}
         onSelect={handleBodyStyleTemplate}
