@@ -13,16 +13,7 @@ import EnhancedLandingPageRendererComplete from "./pages/EnhancedLandingPageRend
 import UserManagement from "./pages/UserManagement";
 import Privacy from "./pages/Privacy";
 import Impressum from "./pages/Impressum";
-import DemoMuseumsmitarbeiter from "./pages/DemoMuseumsmitarbeiter";
 import Analytics from "./pages/Analytics";
-import TemplateGallery from "./pages/TemplateGallery";
-import Collaboration from "./pages/Collaboration";
-import ButtonGalleryDemo from "./pages/ButtonGalleryDemo";
-import DashboardTest from "./pages/DashboardTest";
-import HeaderDemo from "./pages/HeaderDemo";
-import TemplateTestPage from "./pages/TemplateTestPage";
-import TestDemo from "./pages/TestDemo";
-import CodeExport from "./pages/CodeExport";
 
 const queryClient = new QueryClient();
 
@@ -35,7 +26,6 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dashboard-test" element={<DashboardTest />} />
 
           {/* Page Builder Routes */}
           <Route
@@ -57,22 +47,9 @@ const App = () => (
             element={<EnhancedLandingPageRenderer />}
           />
 
-          {/* Demo Pages */}
-          <Route
-            path="/demo/museumsmitarbeiter"
-            element={<DemoMuseumsmitarbeiter />}
-          />
-
           {/* Feature Pages */}
           <Route path="/user-management" element={<UserManagement />} />
           <Route path="/analytics" element={<Analytics />} />
-          <Route path="/templates" element={<TemplateGallery />} />
-          <Route path="/collaboration" element={<Collaboration />} />
-          <Route path="/button-gallery" element={<ButtonGalleryDemo />} />
-          <Route path="/header-demo" element={<HeaderDemo />} />
-          <Route path="/template-test" element={<TemplateTestPage />} />
-          <Route path="/test-demo" element={<TestDemo />} />
-          <Route path="/code-export" element={<CodeExport />} />
 
           {/* Static Pages */}
           <Route path="/privacy" element={<Privacy />} />
