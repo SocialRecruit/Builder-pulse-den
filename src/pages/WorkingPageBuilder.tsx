@@ -765,6 +765,42 @@ export default function WorkingPageBuilder() {
                                     {` #${index + 1}`}
                                   </CardTitle>
                                   <div className="flex gap-1">
+                                    {/* Reorder Buttons */}
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={() => moveBlockUp(block.id)}
+                                      disabled={index === 0}
+                                      title="Nach oben"
+                                      className="h-8 w-8 p-0"
+                                    >
+                                      <ChevronUp className="h-4 w-4" />
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={() => moveBlockDown(block.id)}
+                                      disabled={
+                                        index === page.blocks.length - 1
+                                      }
+                                      title="Nach unten"
+                                      className="h-8 w-8 p-0"
+                                    >
+                                      <ChevronDown className="h-4 w-4" />
+                                    </Button>
+
+                                    {/* Copy Button */}
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={() => copyBlock(block.id)}
+                                      title="Block kopieren"
+                                      className="h-8 w-8 p-0"
+                                    >
+                                      <Copy className="h-4 w-4" />
+                                    </Button>
+
+                                    {/* Expand/Collapse */}
                                     <Button
                                       size="sm"
                                       variant={
@@ -779,15 +815,20 @@ export default function WorkingPageBuilder() {
                                             : block.id,
                                         )
                                       }
+                                      className="h-8 w-8 p-0"
                                     >
                                       {activeBlock === block.id ? "−" : "+"}
                                     </Button>
+
+                                    {/* Delete Button */}
                                     <Button
                                       size="sm"
                                       variant="outline"
                                       onClick={() =>
                                         handleDeleteBlock(block.id)
                                       }
+                                      title="Block löschen"
+                                      className="h-8 w-8 p-0 hover:bg-red-50 hover:border-red-300 hover:text-red-600"
                                     >
                                       <Trash2 className="h-4 w-4" />
                                     </Button>
