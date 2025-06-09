@@ -9,12 +9,14 @@ import Dashboard from "./pages/Dashboard";
 import WorkingPageBuilder from "./pages/WorkingPageBuilder";
 import WorkingPageBuilderFixed from "./pages/WorkingPageBuilderFixed";
 import UltimatePageBuilder from "./pages/UltimatePageBuilder";
+import UltimatePageBuilderComplete from "./pages/UltimatePageBuilderComplete";
 import EnhancedPageBuilderStable from "./pages/EnhancedPageBuilderStable";
 import EnhancedPageBuilderComplete from "./pages/EnhancedPageBuilderComplete";
 import WorkingPageBuilderMinimal from "./pages/WorkingPageBuilderMinimal";
 import WorkingPageBuilderSimple from "./pages/WorkingPageBuilderSimple";
 import TestPageBuilder from "./pages/TestPageBuilder";
 import EnhancedLandingPageRenderer from "./pages/EnhancedLandingPageRenderer";
+import EnhancedLandingPageRendererComplete from "./pages/EnhancedLandingPageRendererComplete";
 import UserManagement from "./pages/UserManagement";
 import Privacy from "./pages/Privacy";
 import Impressum from "./pages/Impressum";
@@ -27,6 +29,7 @@ import DashboardTest from "./pages/DashboardTest";
 import HeaderDemo from "./pages/HeaderDemo";
 import TemplateTestPage from "./pages/TemplateTestPage";
 import TestDemo from "./pages/TestDemo";
+import CodeExport from "./pages/CodeExport";
 
 const queryClient = new QueryClient();
 
@@ -65,6 +68,7 @@ const App = () => (
           <Route path="/header-demo" element={<HeaderDemo />} />
           <Route path="/template-test" element={<TemplateTestPage />} />
           <Route path="/test-demo" element={<TestDemo />} />
+          <Route path="/code-export" element={<CodeExport />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/impressum" element={<Impressum />} />
           <Route path="*" element={<NotFound />} />
