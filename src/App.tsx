@@ -10,6 +10,7 @@ import WorkingPageBuilder from "./pages/WorkingPageBuilder";
 import WorkingPageBuilderFixed from "./pages/WorkingPageBuilderFixed";
 import UltimatePageBuilder from "./pages/UltimatePageBuilder";
 import EnhancedPageBuilderStable from "./pages/EnhancedPageBuilderStable";
+import EnhancedPageBuilderComplete from "./pages/EnhancedPageBuilderComplete";
 import WorkingPageBuilderMinimal from "./pages/WorkingPageBuilderMinimal";
 import WorkingPageBuilderSimple from "./pages/WorkingPageBuilderSimple";
 import TestPageBuilder from "./pages/TestPageBuilder";
@@ -41,7 +42,7 @@ const App = () => (
           <Route path="/dashboard-test" element={<DashboardTest />} />
           <Route
             path="/page-builder/:pageId"
-            element={<EnhancedPageBuilderStable />}
+            element={<EnhancedPageBuilderComplete />}
           />
           <Route
             path="/test-page-builder/:pageId"
