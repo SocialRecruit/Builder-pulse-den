@@ -26,9 +26,11 @@ import {
   ChevronUp,
   ChevronDown,
   Copy,
+  Smile,
 } from "lucide-react";
 import { useLandingPages } from "@/hooks/useLandingPages";
 import { MediaGallery } from "@/components/ui/MediaGallery";
+import { EmojiPicker } from "@/components/ui/EmojiPicker";
 import { toast } from "sonner";
 
 export default function WorkingPageBuilderFixed() {
@@ -41,6 +43,24 @@ export default function WorkingPageBuilderFixed() {
   const [activeBlock, setActiveBlock] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("content");
   const [showMediaGallery, setShowMediaGallery] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [currentListBlock, setCurrentListBlock] = useState<string | null>(null);
+  const [currentItemIndex, setCurrentItemIndex] = useState<number>(0);
+
+  if (!page) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900">
+            Seite nicht gefunden
+          </h1>
+          <Button className="mt-4" onClick={() => navigate("/")}>
+            Zurück zum Dashboard
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   const handleAddBlock = (type: string) => {
     const newBlock = addBlock(page?.id || "", type);
@@ -81,6 +101,28 @@ export default function WorkingPageBuilderFixed() {
     });
   };
 
+  const updateListItemEmoji = (
+    blockId: string,
+    itemIndex: number,
+    emoji: string,
+  ) => {
+    const block = page?.blocks.find((b) => b.id === blockId);
+    if (block && block.content.items) {
+      const newItems = [...block.content.items];
+      newItems[itemIndex] = { ...newItems[itemIndex], emoji };
+      handleUpdateBlock(blockId, {
+        ...block.content,
+        items: newItems,
+      });
+    }
+  };
+
+  const openEmojiPicker = (blockId: string, itemIndex: number) => {
+    setCurrentListBlock(blockId);
+    setCurrentItemIndex(itemIndex);
+    setShowEmojiPicker(true);
+  };
+
   // Block Reorder Functions
   const moveBlockUp = (blockId: string) => {
     const blockIndex = page?.blocks.findIndex((b) => b.id === blockId) || -1;
@@ -109,92 +151,63 @@ export default function WorkingPageBuilderFixed() {
   const copyBlock = (blockId: string) => {
     const blockToCopy = page?.blocks.find((b) => b.id === blockId);
     if (blockToCopy && page) {
-      const newBlock = {
-        ...blockToCopy,
-        id: Date.now().toString(),
-        order: Math.max(...page.blocks.map((b) => b.order)) + 1,
-      };
-      const newBlocks = [...page.blocks, newBlock];
-      updatePage(page.id, { blocks: newBlocks });
-      setActiveBlock(newBlock.id);
+      const newBlock = addBlock(page.id, blockToCopy.type);
+      handleUpdateBlock(newBlock.id, blockToCopy.content);
       toast.success("Block kopiert!");
     }
   };
 
-  if (!pageId || !page) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Card className="w-96">
-          <CardContent className="p-6 text-center">
-            <h2 className="text-xl font-bold mb-4">Seite nicht gefunden</h2>
-            <p className="text-gray-600 mb-4">
-              Die angeforderte Landing Page konnte nicht gefunden werden.
-            </p>
-            <Button onClick={() => navigate("/dashboard")}>
-              Zum Dashboard
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => navigate("/dashboard")}
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Dashboard
-              </Button>
-              <div>
-                <h1 className="text-xl font-bold text-gray-900">
-                  {page.title}
-                </h1>
-                <p className="text-sm text-gray-500">
-                  Page Builder - {page.published ? "Veröffentlicht" : "Entwurf"}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => window.open(`/jobs/${page.slug}`, "_blank")}
-              >
-                <Eye className="w-4 h-4 mr-2" />
-                Vorschau
-              </Button>
-              <Button
-                size="sm"
-                onClick={() => toast.success("Änderungen gespeichert!")}
-              >
-                <Save className="w-4 h-4 mr-2" />
-                Speichern
-              </Button>
+      {/* Navigation */}
+      <div className="bg-white border-b border-gray-200 px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate("/dashboard")}
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Zurück
+            </Button>
+            <div>
+              <h1 className="text-xl font-bold text-gray-900">{page.title}</h1>
+              <p className="text-sm text-gray-500">Landing Page Editor</p>
             </div>
           </div>
-        </div>
-      </header>
 
-      <div className="container mx-auto px-4 py-8">
+          <div className="flex items-center space-x-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => window.open(`/jobs/${page.slug}`, "_blank")}
+            >
+              <Eye className="w-4 h-4 mr-2" />
+              Vorschau
+            </Button>
+            <Button
+              size="sm"
+              onClick={() => toast.success("Automatisch gespeichert!")}
+            >
+              <Save className="w-4 h-4 mr-2" />
+              Speichern
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="p-6">
         <Tabs
           value={activeTab}
           onValueChange={setActiveTab}
           className="space-y-6"
         >
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="content">📝 Inhalt</TabsTrigger>
-            <TabsTrigger value="header">🎨 Header</TabsTrigger>
-            <TabsTrigger value="design">⚙️ Design</TabsTrigger>
+            <TabsTrigger value="content">Content</TabsTrigger>
+            <TabsTrigger value="header">Header</TabsTrigger>
+            <TabsTrigger value="design">Design</TabsTrigger>
           </TabsList>
 
           {/* Content Tab */}
@@ -390,9 +403,9 @@ export default function WorkingPageBuilderFixed() {
                                     </div>
                                   )}
 
-                                  {/* List Editor */}
+                                  {/* List Editor mit Emoji-Picker */}
                                   {block.type === "list" && (
-                                    <div className="space-y-3">
+                                    <div className="space-y-4">
                                       <div>
                                         <Label>Listentitel (optional)</Label>
                                         <Input
@@ -407,80 +420,99 @@ export default function WorkingPageBuilderFixed() {
                                         />
                                       </div>
 
-                                      <div className="space-y-2">
-                                        <Label>Listenpunkte</Label>
-                                        {(block.content.items || []).map(
-                                          (item: any, itemIndex: number) => (
-                                            <div
-                                              key={itemIndex}
-                                              className="flex gap-2 items-start"
-                                            >
-                                              <Input
-                                                value={item.emoji || ""}
-                                                onChange={(e) => {
-                                                  const newItems = [
-                                                    ...block.content.items,
-                                                  ];
-                                                  newItems[itemIndex] = {
-                                                    ...item,
-                                                    emoji: e.target.value,
-                                                  };
-                                                  handleUpdateBlock(block.id, {
-                                                    ...block.content,
-                                                    items: newItems,
-                                                  });
-                                                }}
-                                                placeholder="📋"
-                                                className="w-16"
-                                              />
-                                              <Textarea
-                                                value={item.text || ""}
-                                                onChange={(e) => {
-                                                  const newItems = [
-                                                    ...block.content.items,
-                                                  ];
-                                                  newItems[itemIndex] = {
-                                                    ...item,
-                                                    text: e.target.value,
-                                                  };
-                                                  handleUpdateBlock(block.id, {
-                                                    ...block.content,
-                                                    items: newItems,
-                                                  });
-                                                }}
-                                                placeholder="Listenpunkt..."
-                                                rows={2}
-                                                className="flex-1"
-                                              />
-                                              <Button
-                                                size="sm"
-                                                variant="outline"
-                                                onClick={() =>
-                                                  removeListItem(
-                                                    block.id,
-                                                    block.content.items,
-                                                    itemIndex,
-                                                  )
-                                                }
+                                      <div>
+                                        <div className="flex justify-between items-center mb-3">
+                                          <Label>Listenpunkte</Label>
+                                          <Button
+                                            size="sm"
+                                            onClick={() =>
+                                              addListItem(
+                                                block.id,
+                                                block.content.items || [],
+                                              )
+                                            }
+                                          >
+                                            <Plus className="w-4 h-4 mr-2" />
+                                            Hinzufügen
+                                          </Button>
+                                        </div>
+
+                                        <div className="space-y-3">
+                                          {(block.content.items || []).map(
+                                            (item: any, itemIndex: number) => (
+                                              <div
+                                                key={itemIndex}
+                                                className="flex gap-3 p-3 border rounded-lg bg-gray-50"
                                               >
-                                                <Trash2 className="h-4 w-4" />
-                                              </Button>
-                                            </div>
-                                          ),
+                                                {/* Emoji Button mit Picker */}
+                                                <Button
+                                                  variant="outline"
+                                                  size="sm"
+                                                  onClick={() =>
+                                                    openEmojiPicker(
+                                                      block.id,
+                                                      itemIndex,
+                                                    )
+                                                  }
+                                                  className="h-10 w-10 p-0 text-lg"
+                                                  title="Emoji auswählen"
+                                                >
+                                                  {item.emoji || "📋"}
+                                                </Button>
+
+                                                <div className="flex-1">
+                                                  <Textarea
+                                                    value={item.text || ""}
+                                                    onChange={(e) => {
+                                                      const newItems = [
+                                                        ...(block.content
+                                                          .items || []),
+                                                      ];
+                                                      newItems[itemIndex] = {
+                                                        ...newItems[itemIndex],
+                                                        text: e.target.value,
+                                                      };
+                                                      handleUpdateBlock(
+                                                        block.id,
+                                                        {
+                                                          ...block.content,
+                                                          items: newItems,
+                                                        },
+                                                      );
+                                                    }}
+                                                    placeholder="Listenpunkt-Text"
+                                                    rows={2}
+                                                  />
+                                                </div>
+
+                                                <Button
+                                                  variant="outline"
+                                                  size="sm"
+                                                  onClick={() =>
+                                                    removeListItem(
+                                                      block.id,
+                                                      block.content.items || [],
+                                                      itemIndex,
+                                                    )
+                                                  }
+                                                  className="self-start h-10 w-10 p-0 hover:bg-red-50 hover:border-red-300 hover:text-red-600"
+                                                  title="Listenpunkt löschen"
+                                                >
+                                                  <Trash2 className="h-4 w-4" />
+                                                </Button>
+                                              </div>
+                                            ),
+                                          )}
+                                        </div>
+
+                                        {(!block.content.items ||
+                                          block.content.items.length === 0) && (
+                                          <div className="text-center py-6 text-gray-500 border-2 border-dashed border-gray-300 rounded-lg">
+                                            <p>
+                                              Noch keine Listenpunkte vorhanden
+                                            </p>
+                                          </div>
                                         )}
-                                        <Button
-                                          size="sm"
-                                          variant="outline"
-                                          onClick={() =>
-                                            addListItem(
-                                              block.id,
-                                              block.content.items || [],
-                                            )
-                                          }
-                                        >
-                                          <Plus className="h-4 w-4 mr-2" />
-                                          Punkt hinzufügen
-                                        </Button>
                                       </div>
                                     </div>
                                   )}
@@ -513,6 +545,46 @@ export default function WorkingPageBuilderFixed() {
                                           }
                                           placeholder="https://..."
                                         />
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* Image Editor */}
+                                  {block.type === "image" && (
+                                    <div className="space-y-3">
+                                      <div>
+                                        <Label>Bild</Label>
+                                        <div className="flex gap-2 mt-2">
+                                          <Button
+                                            variant="outline"
+                                            onClick={() =>
+                                              setShowMediaGallery(true)
+                                            }
+                                          >
+                                            <ImageIcon className="w-4 h-4 mr-2" />
+                                            Bild auswählen
+                                          </Button>
+                                          {block.content.src && (
+                                            <Button
+                                              variant="outline"
+                                              onClick={() =>
+                                                handleUpdateBlock(block.id, {
+                                                  ...block.content,
+                                                  src: "",
+                                                })
+                                              }
+                                            >
+                                              Entfernen
+                                            </Button>
+                                          )}
+                                        </div>
+                                        {block.content.src && (
+                                          <img
+                                            src={block.content.src}
+                                            alt="Preview"
+                                            className="mt-2 w-full h-32 object-cover rounded border"
+                                          />
+                                        )}
                                       </div>
                                     </div>
                                   )}
@@ -643,62 +715,6 @@ export default function WorkingPageBuilderFixed() {
                   )}
                 </div>
 
-                {/* Header Height */}
-                <div>
-                  <Label>Header-Höhe</Label>
-                  <Input
-                    type="range"
-                    min="200"
-                    max="1000"
-                    step="50"
-                    value={page.header.customHeight || 400}
-                    onChange={(e) =>
-                      updatePage(page.id, {
-                        header: {
-                          ...page.header,
-                          customHeight: parseInt(e.target.value),
-                        },
-                      })
-                    }
-                    className="w-full"
-                  />
-                  <div className="flex justify-between text-xs text-gray-500">
-                    <span>200px</span>
-                    <span className="font-medium text-blue-600">
-                      {page.header.customHeight || 400}px
-                    </span>
-                    <span>1000px</span>
-                  </div>
-                </div>
-
-                {/* Title Font Size */}
-                <div>
-                  <Label>Titel-Schriftgröße</Label>
-                  <Input
-                    type="range"
-                    min="24"
-                    max="96"
-                    step="4"
-                    value={page.header.titleFontSize || 48}
-                    onChange={(e) =>
-                      updatePage(page.id, {
-                        header: {
-                          ...page.header,
-                          titleFontSize: parseInt(e.target.value),
-                        },
-                      })
-                    }
-                    className="w-full"
-                  />
-                  <div className="flex justify-between text-xs text-gray-500">
-                    <span>Klein (24px)</span>
-                    <span className="font-medium text-blue-600">
-                      {page.header.titleFontSize || 48}px
-                    </span>
-                    <span>Groß (96px)</span>
-                  </div>
-                </div>
-
                 {/* Header Content */}
                 <div className="space-y-4 border-t pt-4">
                   <div>
@@ -784,6 +800,18 @@ export default function WorkingPageBuilderFixed() {
           setShowMediaGallery(false);
         }}
         selectedUrl={page.header.image}
+      />
+
+      {/* Emoji Picker Modal */}
+      <EmojiPicker
+        isOpen={showEmojiPicker}
+        onClose={() => setShowEmojiPicker(false)}
+        onEmojiSelect={(emoji) => {
+          if (currentListBlock && currentItemIndex !== null) {
+            updateListItemEmoji(currentListBlock, currentItemIndex, emoji);
+          }
+          setShowEmojiPicker(false);
+        }}
       />
     </div>
   );
