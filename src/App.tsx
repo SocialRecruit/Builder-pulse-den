@@ -40,7 +40,7 @@ const App = () => (
           <Route path="/dashboard-test" element={<DashboardTest />} />
           <Route
             path="/page-builder/:pageId"
-            element={<UltimatePageBuilder />}
+            element={<WorkingPageBuilderFixed />}
           />
           <Route
             path="/test-page-builder/:pageId"
