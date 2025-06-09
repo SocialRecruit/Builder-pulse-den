@@ -47,7 +47,7 @@ import {
 } from "@/components/ui/TemplateSelector";
 import { ButtonTemplateSelector } from "@/components/ui/ButtonTemplateSelector";
 import { BlockStyleOptions } from "@/components/ui/BlockStyleOptions";
-import { BodyStyleTemplates } from "@/components/ui/BodyStyleTemplates";
+import { BodyStyleTemplateSelector } from "@/components/ui/BodyStyleTemplates";
 import { demoTemplates, DemoTemplate } from "@/data/demoTemplates";
 import { toast } from "sonner";
 
