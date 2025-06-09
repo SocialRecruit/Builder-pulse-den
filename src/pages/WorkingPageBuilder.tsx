@@ -1888,6 +1888,21 @@ export default function WorkingPageBuilder() {
         </Tabs>
       </div>
 
+      {/* Enhanced Emoji Picker Modal */}
+      <EnhancedEmojiPicker
+        isOpen={showEmojiPicker}
+        onClose={() => {
+          setShowEmojiPicker(false);
+          setEditingEmojiItem(null);
+        }}
+        onEmojiSelect={handleEmojiSelect}
+        currentEmoji={
+          editingEmojiItem &&
+          page.blocks.find((b) => b.id === editingEmojiItem.blockId)?.content
+            .items?.[editingEmojiItem.itemIndex]?.emoji
+        }
+      />
+
       {/* Media Gallery Modal */}
       <MediaGallery
         isOpen={showMediaGallery}
