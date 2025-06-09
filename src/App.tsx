@@ -8,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import WorkingPageBuilder from "./pages/WorkingPageBuilder";
 import WorkingPageBuilderFixed from "./pages/WorkingPageBuilderFixed";
+import UltimatePageBuilder from "./pages/UltimatePageBuilder";
 import WorkingPageBuilderMinimal from "./pages/WorkingPageBuilderMinimal";
 import WorkingPageBuilderSimple from "./pages/WorkingPageBuilderSimple";
 import TestPageBuilder from "./pages/TestPageBuilder";
@@ -39,7 +40,7 @@ const App = () => (
           <Route path="/dashboard-test" element={<DashboardTest />} />
           <Route
             path="/page-builder/:pageId"
-            element={<WorkingPageBuilderFixed />}
+            element={<UltimatePageBuilder />}
           />
           <Route
             path="/test-page-builder/:pageId"
